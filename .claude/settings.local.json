@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(docker exec:*)",
-      "Bash(docker inspect:*)"
+      "Bash(docker inspect:*)",
+      "Bash(docker cp:*)"
     ],
     "deny": [],
     "ask": []

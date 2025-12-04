@@ -1,0 +1,260 @@
+# Complex DocType Example
+# Demonstrates multiple relationships, calculated fields, and advanced patterns
+
+doctype:
+  name: "Service Assignment"
+  module: "Nursing Management"
+  naming_rule: "autoname"
+  autoname: "format:SA-{#####}"
+  is_submittable: false
+  track_changes: true
+  title_field: "assignment_title"
+  description: "Assignment of caregiver to patient with service details"
+
+  fields:
+    # Basic Assignment Section
+    - fieldname: "assignment_section"
+      fieldtype: "Section Break"
+      label: "פרטי השיבוץ"
+
+    - fieldname: "assignment_title"
+      fieldtype: "Data"
+      label: "שם השיבוץ"
+      reqd: true
+      in_list_view: true
+      description: "שם תיאורי לשיבוץ"
+
+    - fieldname: "assignment_date"
+      fieldtype: "Date"
+      label: "תאריך שיבוץ"
+      reqd: true
+      default: "Today"
+      in_list_view: true
+
+    - fieldname: "column_break_1"
+      fieldtype: "Column Break"
+
+    - fieldname: "status"
+      fieldtype: "Select"
+      label: "סטטוס"
+      options: "פעיל\nמושהה\nהסתיים\nבוטל"
+      default: "פעיל"
+      reqd: true
+      in_list_view: true
+      in_standard_filter: true
+
+    # Service Provider Relationship
+    - fieldname: "provider_section"
+      fieldtype: "Section Break"
+      label: "נותן השירות"
+
+    - fieldname: "service_provider"
+      fieldtype: "Link"
+      label: "נותן שירות"
+      options: "Service Provider"
+      reqd: true
+      in_standard_filter: true
+
+    - fieldname: "provider_name"
+      fieldtype: "Data"
+      label: "שם נותן השירות"
+      read_only: true
+      fetch_from: "service_provider.provider_name"
+      in_list_view: true
+
+    - fieldname: "column_break_2"
+      fieldtype: "Column Break"
+
+    - fieldname: "branch"
+      fieldtype: "Link"
+      label: "סניף"
+      options: "Service Provider Branch"
+      reqd: true
+
+    - fieldname: "branch_code"
+      fieldtype: "Data"
+      label: "קוד סניף"
+      read_only: true
+      fetch_from: "branch.branch_code"
+
+    # Caregiver Assignment
+    - fieldname: "caregiver_section"
+      fieldtype: "Section Break"
+      label: "מטפל"
+
+    - fieldname: "caregiver"
+      fieldtype: "Link"
+      label: "מטפל"
+      options: "Caregiver"
+      reqd: true
+      in_standard_filter: true
+
+    - fieldname: "caregiver_name"
+      fieldtype: "Data"
+      label: "שם מטפל"
+      read_only: true
+      fetch_from: "caregiver.full_name"
+      in_list_view: true
+
+    - fieldname: "column_break_3"
+      fieldtype: "Column Break"
+
+    - fieldname: "caregiver_id"
+      fieldtype: "Data"
+      label: "ת.ז. מטפל"
+      read_only: true
+      fetch_from: "caregiver.id_number"
+
+    - fieldname: "caregiver_phone"
+      fieldtype: "Data"
+      label: "טלפון מטפל"
+      read_only: true
+      fetch_from: "caregiver.mobile_phone"
+
+    # Service Period
+    - fieldname: "period_section"
+      fieldtype: "Section Break"
+      label: "תקופת שירות"
+
+    - fieldname: "start_date"
+      fieldtype: "Date"
+      label: "תאריך התחלה"
+      reqd: true
+      description: "תאריך התחלת מתן השירות"
+
+    - fieldname: "end_date"
+      fieldtype: "Date"
+      label: "תאריך סיום"
+      description: "תאריך סיום משוער או בפועל"
+
+    - fieldname: "column_break_4"
+      fieldtype: "Column Break"
+
+    - fieldname: "duration_days"
+      fieldtype: "Int"
+      label: "משך בימים"
+      read_only: true
+      description: "יחושב אוטומטית מתאריכי התחלה וסיום"
+
+    # Service Details
+    - fieldname: "service_section"
+      fieldtype: "Section Break"
+      label: "פרטי שירות"
+
+    - fieldname: "service_type"
+      fieldtype: "Select"
+      label: "סוג שירות"
+      options: "טיפול בבית\nמרכז יום\nקהילה תומכת\nמוצרי ספיגה"
+      reqd: true
+      in_standard_filter: true
+
+    - fieldname: "weekly_hours"
+      fieldtype: "Float"
+      label: "שעות שבועיות"
+      precision: 1
+      description: "מספר שעות שבועיות"
+
+    - fieldname: "column_break_5"
+      fieldtype: "Column Break"
+
+    - fieldname: "hourly_rate"
+      fieldtype: "Float"
+      label: "תעריף לשעה"
+      precision: 2
+      description: "תעריף בש\"ח לשעה"
+
+    - fieldname: "monthly_cost"
+      fieldtype: "Float"
+      label: "עלות חודשית משוערת"
+      precision: 2
+      read_only: true
+      description: "יחושב אוטומטית: שעות שבועיות × תעריף × 4.33"
+
+    # Schedule Details (Child Table)
+    - fieldname: "schedule_section"
+      fieldtype: "Section Break"
+      label: "לוח זמנים"
+
+    - fieldname: "schedule"
+      fieldtype: "Table"
+      label: "שיבוץ שבועי"
+      options: "Assignment Schedule"
+      description: "לוח זמנים שבועי של השיבוץ"
+
+    # Documents and Compliance
+    - fieldname: "compliance_section"
+      fieldtype: "Section Break"
+      label: "מסמכים ותאימות"
+
+    - fieldname: "contract"
+      fieldtype: "Link"
+      label: "הסכם"
+      options: "Contract"
+      description: "הסכם הרלוונטי לשיבוץ"
+
+    - fieldname: "contract_valid"
+      fieldtype: "Check"
+      label: "הסכם בתוקף"
+      read_only: true
+      fetch_from: "contract.is_valid"
+
+    - fieldname: "column_break_6"
+      fieldtype: "Column Break"
+
+    - fieldname: "insurance_verified"
+      fieldtype: "Check"
+      label: "ביטוח אומת"
+      default: false
+      description: "האם אומת קיום ביטוח תקף"
+
+    - fieldname: "background_check_date"
+      fieldtype: "Date"
+      label: "תאריך בדיקת רקע"
+
+    # Notes and Attachments
+    - fieldname: "notes_section"
+      fieldtype: "Section Break"
+      label: "הערות וקבצים"
+
+    - fieldname: "notes"
+      fieldtype: "Text Editor"
+      label: "הערות"
+
+    - fieldname: "column_break_7"
+      fieldtype: "Column Break"
+
+    - fieldname: "attachment"
+      fieldtype: "Attach"
+      label: "קובץ מצורף"
+
+  permissions:
+    - role: "System Manager"
+      read: 1
+      write: 1
+      create: 1
+      delete: 1
+
+    - role: "Internal Reviewer"
+      read: 1
+      write: 1
+      create: 1
+      delete: 0
+
+    - role: "HQ Approver"
+      read: 1
+      write: 1
+      create: 1
+      delete: 1
+
+    - role: "Service Provider User"
+      read: 1
+      write: 0
+      create: 0
+      delete: 0
+
+# Note: This DocType would typically have a Python controller to:
+# 1. Validate that end_date > start_date
+# 2. Calculate duration_days automatically
+# 3. Calculate monthly_cost from weekly_hours and hourly_rate
+# 4. Verify caregiver is associated with the selected service provider
+# 5. Check that contract is valid before allowing assignment

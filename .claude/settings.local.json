@@ -3,7 +3,9 @@
     "allow": [
       "Bash(docker exec:*)",
       "Bash(docker inspect:*)",
-      "Bash(docker cp:*)"
+      "Bash(docker cp:*)",
+      "Bash(find:*)",
+      "Bash(docker ps:*)"
     ],
     "deny": [],
     "ask": []

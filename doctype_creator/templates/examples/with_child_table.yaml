@@ -1,0 +1,51 @@
+# DocType with Child Table Example
+# Parent-child relationship
+
+doctype:
+  name: "Service Agreement"
+  module: "Nursing Management"
+  naming_rule: "autoname"
+  autoname: "format:AGR-{#####}"
+  is_submittable: true
+  track_changes: true
+  description: "Service agreement with line items"
+
+  fields:
+    - fieldname: "agreement_section"
+      fieldtype: "Section Break"
+      label: "פרטי הסכם"
+
+    - fieldname: "agreement_name"
+      fieldtype: "Data"
+      label: "שם הסכם"
+      reqd: true
+      in_list_view: true
+
+    - fieldname: "provider"
+      fieldtype: "Link"
+      label: "ספק"
+      options: "Service Provider"
+      reqd: true
+      in_list_view: true
+
+    - fieldname: "start_date"
+      fieldtype: "Date"
+      label: "תאריך התחלה"
+      reqd: true
+      default: "Today"
+
+    - fieldname: "items_section"
+      fieldtype: "Section Break"
+      label: "פריטים"
+
+    - fieldname: "items"
+      fieldtype: "Table"
+      label: "פריטי הסכם"
+      options: "Agreement Item"
+
+  permissions:
+    - role: "System Manager"
+      read: 1
+      write: 1
+      create: 1
+      submit: 1

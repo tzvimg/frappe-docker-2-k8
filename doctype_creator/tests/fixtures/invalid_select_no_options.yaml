@@ -1,0 +1,17 @@
+doctype:
+  name: "Test Select"
+  module: "Nursing Management"
+  naming_rule: "autoname"
+  autoname: "format:TEST-{####}"
+
+  fields:
+    - fieldname: "status"
+      fieldtype: "Select"
+      label: "Status"
+      reqd: true
+
+  permissions:
+    - role: "System Manager"
+      read: 1
+      write: 1
+      create: 1

@@ -1,0 +1,17 @@
+doctype:
+  name: "Test Bad Fieldname"
+  module: "Nursing Management"
+  naming_rule: "autoname"
+  autoname: "format:TEST-{####}"
+
+  fields:
+    - fieldname: "ProviderName"
+      fieldtype: "Data"
+      label: "Provider Name"
+      reqd: true
+
+  permissions:
+    - role: "System Manager"
+      read: 1
+      write: 1
+      create: 1

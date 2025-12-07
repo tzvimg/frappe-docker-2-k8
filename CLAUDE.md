@@ -4,13 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This repository contains a **Frappe Framework** implementation for a Nursing Management System (אגף סיעוד) for Israel's nursing care administration. The project implements service provider management, caregiver tracking, contracts, document approvals, and workflow automation.
+This repository contains a **Frappe Framework** implementation for a Nursing Management System (אגף סיעוד) for Israel's nursing care administration. This is a fresh POC (Proof of Concept) starting point for implementing service provider management, caregiver tracking, contracts, document approvals, and workflow automation.
 
 **Framework:** Frappe Framework v15 (Low-code, metadata-driven platform)
 **Environment:** Docker-based development with frappe_docker
 **Primary App:** `nursing_management` (custom Frappe app)
 **Language:** Python 3.10+, JavaScript (Node.js 16+)
 **UI Language:** Hebrew (RTL interface)
+
+**Current Status:** Fresh POC start - core DocTypes and workflows are to be implemented
 
 ## Development Environment
 
@@ -72,15 +74,14 @@ C:\dev\btl\frappe\
 │   │   └── frappe-bench/      # Frappe bench installation
 │   │       ├── apps/
 │   │       │   ├── frappe/    # Core framework
-│   │       │   ├── erpnext/   # ERPNext (if needed)
-│   │       │   └── nursing_management/  # POC app
+│   │       │   ├── erpnext/   # ERPNext (if installed)
+│   │       │   └── nursing_management/  # Custom POC app
 │   │       └── sites/
 │   │           └── development.localhost/
-│   └── docs/                  # Docker setup docs
-├── *.py                       # Helper scripts for DocType creation
-├── *_controller.py            # Python controller implementations
-├── *.md                       # Project documentation
-└── workflow-implementation-plan.md  # Detailed workflow specs
+│   └── docs/                  # Docker setup documentation
+├── doctype_creator/           # Utility tools for DocType creation
+├── .claude/                   # Claude Code configuration
+└── CLAUDE.md                  # This file - project documentation
 ```
 
 ### Nursing Management App Structure
@@ -89,16 +90,8 @@ C:\dev\btl\frappe\
 /workspace/development/frappe-bench/apps/nursing_management/
 ├── nursing_management/
 │   ├── nursing_management/          # Main module
-│   │   ├── doctype/                # DocTypes directory
-│   │   │   ├── service_provider/
-│   │   │   │   ├── service_provider.json    # Schema definition
-│   │   │   │   ├── service_provider.py      # Business logic
-│   │   │   │   └── service_provider.js      # Client-side logic
-│   │   │   ├── service_provider_branch/
-│   │   │   ├── contract/
-│   │   │   ├── document_approval/
-│   │   │   ├── caregiver/
-│   │   │   └── service_provider_application/  # NEW - Workflow DocType
+│   │   ├── doctype/                # DocTypes directory (to be created)
+│   │   │   └── (DocTypes will be added here as development progresses)
 │   │   └── config/
 │   ├── hooks.py               # App lifecycle hooks
 │   ├── modules.txt
@@ -107,47 +100,58 @@ C:\dev\btl\frappe\
 └── requirements.txt
 ```
 
+**Note:** DocTypes are created during development either via Frappe UI or programmatically. Each DocType will have its own subdirectory containing:
+- `<doctype_name>.json` - Schema definition
+- `<doctype_name>.py` - Python controller (business logic)
+- `<doctype_name>.js` - Client-side JavaScript (optional)
+
 ## Core DocTypes (Entities)
 
-### Implemented DocTypes
+The following DocTypes are planned for implementation as part of the Nursing Management System POC:
+
+### Planned Core Entities
 
 1. **Service Provider** (`service_provider`)
    - Primary Key: `hp_number` (מספר ח"פ - 9 digits)
    - Manages service provider master data
    - Auto-naming: `SP-.####`
+   - Status: To be implemented
 
 2. **Service Provider Branch** (`service_provider_branch`)
    - Links to Service Provider
    - Branch code: 2-digit code
    - Auto-naming: `SPB-.####`
+   - Status: To be implemented
 
 3. **Contract** (`contract`)
    - Links to Service Provider Branch
    - Tracks contract validity and expiry
    - Auto-naming: `CON-.####`
+   - Status: To be implemented
 
 4. **Document Approval** (`document_approval`)
    - Links to Contract
    - Manages required documents (insurance, permits, etc.)
    - Status tracking: חסר, הוגש, תקין, לא תקין
    - Auto-naming: `DOC-.####`
+   - Status: To be implemented
 
 5. **Caregiver** (`caregiver`)
    - Primary Key: `id_number` (תעודת זהות)
    - Includes Employment History child table
    - Auto-naming: `CG-.####`
+   - Status: To be implemented
 
-6. **Application Document Checklist** (`application_document_checklist`)
-   - Child table for Service Provider Application
-   - Tracks document submission status
-
-### Planned/In Progress
-
-7. **Service Provider Application** (`service_provider_application`)
-   - NEW workflow-based DocType for onboarding new providers
+6. **Service Provider Application** (`service_provider_application`)
+   - Workflow-based DocType for onboarding new providers
    - Auto-naming: `SPA-.#####`
    - 7 workflow states, 8 transitions
-   - See: `workflow-implementation-plan.md` for full specs
+   - Status: To be implemented
+
+7. **Application Document Checklist** (`application_document_checklist`)
+   - Child table for Service Provider Application
+   - Tracks document submission status
+   - Status: To be implemented
 
 ## Key Business Rules
 
@@ -183,15 +187,7 @@ All DocTypes use Frappe's auto-naming feature:
 3. Fill in fields and save
 4. System auto-generates JSON and Python files
 
-**Method 2: Helper Scripts (Available in repo root)**
-```bash
-# Example scripts in C:\dev\btl\frappe\
-./create_spa_doctype.py
-./create_contract_doctype.py
-./create_branch_doctype.py
-```
-
-**Method 3: Python Code**
+**Method 2: Python Code (in bench console or custom scripts)**
 ```python
 # Inside bench console
 import frappe
@@ -244,9 +240,9 @@ class ServiceProvider(Document):
 
 ## Workflows
 
-### Service Provider Application Workflow
+### Service Provider Application Workflow (Planned)
 
-**States:**
+**Workflow States:**
 1. Draft (טיוטה/הגשה ראשונית)
 2. HQ_Check (בדיקת מטה)
 3. Data_Review (בדיקת נתונים)
@@ -255,7 +251,7 @@ class ServiceProvider(Document):
 6. Rejected (נדחה)
 7. Approved (הסכם התקבל)
 
-**Transitions:**
+**Workflow Transitions:**
 - Draft → HQ_Check (Service Provider User)
 - HQ_Check → Data_Review (HQ Approver, if valid)
 - HQ_Check → Rejected (HQ Approver, if invalid)
@@ -265,18 +261,18 @@ class ServiceProvider(Document):
 - Agreement_Prep → Rejected (Internal Reviewer, if documents not accepted)
 - Final_HQ_Processing → Approved (HQ Approver, final approval)
 
-**Email Automation:**
+**Planned Email Automation:**
 - New application notification to HQ
 - Rejection notification to applicant
 - Documents approved notification
 - Final approval notification
 
-See `workflow-implementation-plan.md` for complete implementation details including:
-- Field specifications (45+ fields across 8 sections)
-- Role definitions (Service Provider User, Internal Reviewer, HQ Approver)
-- Email templates (Hebrew)
-- Python controller logic
-- JavaScript enhancements
+**Roles:**
+- Service Provider User (external portal user)
+- Internal Reviewer (internal staff)
+- HQ Approver (management level)
+
+Status: To be implemented
 
 ## Hebrew (RTL) Interface
 
@@ -302,7 +298,7 @@ Use Hebrew for dropdown options:
 ```
 
 ### Email Templates
-Email templates use Hebrew with HTML formatting. See `workflow-implementation-plan.md` sections 3.4 for examples.
+Email templates will use Hebrew with HTML formatting when workflows are implemented.
 
 ## Testing
 
@@ -334,8 +330,8 @@ providers = frappe.get_all('Service Provider', fields=['name', 'provider_name'])
 print(providers)
 ```
 
-### Automated Test Scripts
-Test scripts are available in repo root (e.g., `test_phase2.py`)
+### Automated Testing
+Custom test scripts can be created in Python using Frappe's test framework or as standalone scripts in the `doctype_creator/` directory.
 
 ## Important Notes
 
@@ -368,13 +364,43 @@ Test scripts are available in repo root (e.g., `test_phase2.py`)
 
 ## Additional Documentation
 
-- `workflow-implementation-plan.md` - Complete workflow implementation guide (1400+ lines)
-- `workflow-spec.md` - Original Hebrew workflow specification
-- `entities-doc.md` - Hebrew entity documentation with semantic metadata
-- `frappe-poc-plan.md` - POC implementation plan with phase tracking
-- `SERVICE_PROVIDER_APPLICATION_UI_GUIDE.md` - UI creation guide for new DocType
+External documentation resources:
 - `frappe_docker/docs/development.md` - Docker development setup guide
 - `frappe_docker/docs/getting-started.md` - Comprehensive Frappe Docker guide
+- Official Frappe Framework documentation: https://frappeframework.com/docs
+
+**Note:** Previous implementation documentation has been archived. This is a fresh POC start.
+
+## POC Development Roadmap
+
+### Phase 1: Core Entity Setup
+- [ ] Create Service Provider DocType
+- [ ] Create Service Provider Branch DocType
+- [ ] Implement HP number validation
+- [ ] Set up basic relationships
+
+### Phase 2: Contract Management
+- [ ] Create Contract DocType
+- [ ] Create Document Approval DocType
+- [ ] Implement date validations
+- [ ] Set up document tracking
+
+### Phase 3: Caregiver Management
+- [ ] Create Caregiver DocType
+- [ ] Create Employment History child table
+- [ ] Implement Israeli ID validation
+
+### Phase 4: Workflow Implementation
+- [ ] Create Service Provider Application DocType
+- [ ] Set up workflow states and transitions
+- [ ] Configure role-based permissions
+- [ ] Implement email notifications
+
+### Phase 5: Testing and Refinement
+- [ ] End-to-end testing
+- [ ] UI/UX improvements
+- [ ] Hebrew translation verification
+- [ ] Performance optimization
 
 ## Architecture Patterns
 

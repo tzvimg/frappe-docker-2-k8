@@ -1,6 +1,0 @@
-doctype:
-  module: "Nursing Management"
-  naming_rule: "autoname"
-  autoname: "format:TEST-{####}"
-  fields: []
-  permissions: []

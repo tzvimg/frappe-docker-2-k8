@@ -12,7 +12,8 @@
       "Bash(docker rm:*)",
       "Bash(docker volume:*)",
       "Bash(python -m pip install:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(./scripts/load.sh:*)"
     ],
     "deny": [],
     "ask": []

@@ -8,11 +8,40 @@ This repository contains a **Frappe Framework** implementation for a Nursing Man
 
 **Framework:** Frappe Framework v15 (Low-code, metadata-driven platform)
 **Environment:** Docker-based development with frappe_docker
-**Primary App:** `nursing_management` (custom Frappe app)
+**Primary App:** `siud` (custom Frappe app for Supplier Inquiry and User management/Nursing Management)
 **Language:** Python 3.10+, JavaScript (Node.js 16+)
 **UI Language:** Hebrew (RTL interface)
 
 **Current Status:** Fresh POC start - core DocTypes and workflows are to be implemented
+
+## Quick Reference
+
+### Running DocType Creation Scripts
+
+**From Host Machine (Recommended):**
+```bash
+./run_doctype_script.sh <module.function>
+
+# Examples:
+./run_doctype_script.sh create_all_entities.create_all_doctypes
+./run_doctype_script.sh create_supplier.create_supplier_doctype
+```
+
+**Direct Command (from host or inside container):**
+```bash
+# Inside container
+bench --site development.localhost execute siud.doctypes_loading.<module>.<function>
+
+# From host
+docker exec frappe_docker_devcontainer-frappe-1 bash -c \
+  "cd /workspace/development/frappe-bench && \
+   bench --site development.localhost execute siud.doctypes_loading.<module>.<function>"
+```
+
+**Command Pattern:**
+- **App:** `siud` (constant)
+- **Module Path:** `doctypes_loading` (constant)
+- **Variable:** `<module>.<function>` (e.g., `create_all_entities.create_all_doctypes`)
 
 ## Development Environment
 
@@ -33,10 +62,28 @@ development.localhost
 
 **IMPORTANT:** Always run bench commands from `/workspace/development/frappe-bench` directory inside the container.
 
+### DocTypes Loading Directory Mount
+
+The `doctypes_loading/` directory from the host is mounted into the container for programmatic DocType creation:
+
+- **Host path:** `/home/tzvi/frappe/doctypes_loading/`
+- **Container path:** `/workspace/development/frappe-bench/apps/siud/siud/doctypes_loading/`
+- **Purpose:** Version-controlled DocType creation scripts that can be executed via `bench execute`
+
+This mounting enables:
+1. Edit scripts on host with any IDE
+2. Execute scripts inside container with Frappe context
+3. Version control DocType schemas as code
+4. Reproducible environment setup
+
 ### Common Development Commands
 
 ```bash
 # Inside container at /workspace/development/frappe-bench
+
+# Environment constants (for reference)
+SITE="development.localhost"
+APP="siud"
 
 # List installed apps
 bench --site development.localhost list-apps
@@ -48,13 +95,99 @@ bench --site development.localhost clear-cache
 bench --site development.localhost migrate
 
 # Build frontend assets
-bench build --app nursing_management
+bench build --app siud
 
 # Access Python console (for testing/debugging)
 bench --site development.localhost console
 
 # Start development server (auto-reload)
 bench start
+
+# Execute Python scripts from doctypes_loading/
+# Pattern: bench --site <SITE> execute <APP>.doctypes_loading.<script>.<function>
+bench --site development.localhost execute siud.doctypes_loading.create_all_entities.create_all_doctypes
+```
+
+### Command Shortcuts and Aliases
+
+To minimize variation between commands and make them more abstract, you can create shell aliases or helper scripts:
+
+**Option 1: Shell Aliases (inside container)**
+```bash
+# Add to ~/.bashrc or run directly in container shell
+alias bench-exec='bench --site development.localhost execute siud.doctypes_loading'
+
+# Usage becomes much simpler:
+bench-exec create_all_entities.create_all_doctypes
+bench-exec create_supplier.create_supplier_doctype
+bench-exec create_all_entities.delete_all_doctypes
+```
+
+**Option 2: Helper Script (Included)**
+A helper script is provided at `/home/tzvi/frappe/run_doctype_script.sh` that abstracts away the container and path details:
+```bash
+#!/bin/bash
+# Usage: ./run_doctype_script.sh <module.function>
+# Example: ./run_doctype_script.sh create_all_entities.create_all_doctypes
+
+SITE="development.localhost"
+APP="siud"
+MODULE_PATH="doctypes_loading"
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 <module.function>"
+    echo "Example: $0 create_all_entities.create_all_doctypes"
+    exit 1
+fi
+
+bench --site "$SITE" execute "$APP.$MODULE_PATH.$1"
+```
+
+Usage from host machine:
+```bash
+# From /home/tzvi/frappe/
+./run_doctype_script.sh create_all_entities.create_all_doctypes
+./run_doctype_script.sh create_supplier.create_supplier_doctype
+./run_doctype_script.sh create_all_entities.delete_all_doctypes
+
+# Get help
+./run_doctype_script.sh --help
+```
+
+The script automatically handles:
+- Docker container execution
+- Correct working directory
+- Full module path construction
+- Success/failure feedback
+- Reminder to clear cache
+
+**Option 3: Python Wrapper**
+Create `doctypes_loading/run.py` with a CLI:
+```python
+import frappe
+import click
+
+@click.command()
+@click.argument('action')
+def run(action):
+    """Run DocType creation scripts"""
+    # Maps simple names to full module paths
+    actions = {
+        'create-all': 'siud.doctypes_loading.create_all_entities.create_all_doctypes',
+        'delete-all': 'siud.doctypes_loading.create_all_entities.delete_all_doctypes',
+        # Add more mappings as needed
+    }
+
+    if action in actions:
+        frappe.init(site='development.localhost')
+        frappe.connect()
+        frappe.execute_cmd(actions[action])
+    else:
+        print(f"Unknown action: {action}")
+        print(f"Available actions: {', '.join(actions.keys())}")
+
+if __name__ == '__main__':
+    run()
 ```
 
 ### Accessing the Application
@@ -68,30 +201,33 @@ bench start
 ### Repository Structure
 
 ```
-C:\dev\btl\frappe\
+/home/tzvi/frappe/
 ├── frappe_docker/              # Frappe Docker infrastructure (upstream)
 │   ├── development/            # Development workspace
 │   │   └── frappe-bench/      # Frappe bench installation
 │   │       ├── apps/
 │   │       │   ├── frappe/    # Core framework
 │   │       │   ├── erpnext/   # ERPNext (if installed)
-│   │       │   └── nursing_management/  # Custom POC app
+│   │       │   └── siud/      # Custom POC app (Supplier Inquiry & User Data/Nursing)
 │   │       └── sites/
 │   │           └── development.localhost/
 │   └── docs/                  # Docker setup documentation
-├── doctype_creator/           # Utility tools for DocType creation
+├── doctype_creator/           # Legacy utility tools for DocType creation
+├── doctypes_loading/          # DocType creation scripts (mounted into container)
+├── run_doctype_script.sh      # Helper script to run DocType scripts with minimal variation
 ├── .claude/                   # Claude Code configuration
 └── CLAUDE.md                  # This file - project documentation
 ```
 
-### Nursing Management App Structure
+### SIUD App Structure
 
 ```
-/workspace/development/frappe-bench/apps/nursing_management/
-├── nursing_management/
-│   ├── nursing_management/          # Main module
-│   │   ├── doctype/                # DocTypes directory (to be created)
-│   │   │   └── (DocTypes will be added here as development progresses)
+/workspace/development/frappe-bench/apps/siud/
+├── siud/
+│   ├── siud/                        # Main module
+│   │   ├── doctype/                # DocTypes directory
+│   │   │   └── (DocTypes are created here programmatically or via UI)
+│   │   ├── doctypes_loading/       # Mounted from host - DocType creation scripts
 │   │   └── config/
 │   ├── hooks.py               # App lifecycle hooks
 │   ├── modules.txt
@@ -202,6 +338,91 @@ doc = frappe.get_doc({
 })
 doc.insert()
 frappe.db.commit()
+```
+
+**Method 3: Programmatic Creation via bench execute (Recommended for bulk operations)**
+
+For creating multiple related DocTypes, use Python scripts in the `doctypes_loading/` directory. This approach is ideal for:
+- Creating entire entity sets at once
+- Version-controlled DocType definitions
+- Reproducible development environments
+- Automated setup scripts
+
+**Setup:**
+
+1. Create Python scripts in `/home/tzvi/frappe/doctypes_loading/` directory on the host machine
+2. This directory is mounted into the container at `/workspace/development/frappe-bench/apps/siud/siud/doctypes_loading/`
+3. Scripts can be executed from the container using `bench execute`
+
+**Command Pattern:**
+```bash
+# General pattern
+bench --site development.localhost execute siud.doctypes_loading.<module_name>.<function_name>
+
+# Example: Create all entities
+bench --site development.localhost execute siud.doctypes_loading.create_all_entities.create_all_doctypes
+```
+
+**Module Path Convention:**
+- App name: `siud` (constant across all commands)
+- Module path: `doctypes_loading` (constant across all commands)
+- Variable parts: `<module_name>.<function_name>`
+
+**Example Script Structure:**
+```python
+# /home/tzvi/frappe/doctypes_loading/create_my_doctype.py
+import frappe
+
+@frappe.whitelist()
+def create_my_doctype():
+    """Create a custom DocType programmatically"""
+
+    doc = frappe.get_doc({
+        'doctype': 'DocType',
+        'name': 'My Custom DocType',
+        'module': 'Siud',
+        'autoname': 'format:MYDT-{####}',
+        'fields': [
+            {
+                'fieldname': 'title',
+                'fieldtype': 'Data',
+                'label': 'כותרת',
+                'reqd': 1
+            }
+        ]
+    })
+
+    doc.insert()
+    frappe.db.commit()
+    frappe.msgprint(f"✓ Created {doc.name}")
+
+    return {"success": True}
+
+# Run with:
+# bench --site development.localhost execute siud.doctypes_loading.create_my_doctype.create_my_doctype
+```
+
+**Master Script Pattern (create_all_entities.py):**
+
+For complex systems with multiple dependent DocTypes, create a master script that:
+1. Imports individual creation functions
+2. Executes them in dependency order
+3. Provides status feedback
+
+See `doctypes_loading/create_all_entities.py` for a complete example.
+
+**Advantages:**
+- Version control for DocType schemas
+- Repeatable setup across environments
+- Easy to reset and rebuild during POC phase
+- Can include data validation and relationships
+- Single command to create entire entity sets
+
+**After Running:**
+```bash
+# Always clear cache and migrate after creating DocTypes
+bench --site development.localhost clear-cache
+bench --site development.localhost migrate
 ```
 
 ### Modifying DocTypes
@@ -331,7 +552,7 @@ print(providers)
 ```
 
 ### Automated Testing
-Custom test scripts can be created in Python using Frappe's test framework or as standalone scripts in the `doctype_creator/` directory.
+Custom test scripts can be created in Python using Frappe's test framework or as standalone scripts in the `doctypes_loading/` directory. These scripts can be executed using the `bench execute` command pattern described above.
 
 ## Important Notes
 

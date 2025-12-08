@@ -33,12 +33,12 @@ def create_supplier_doctype():
                 "fieldtype": "Section Break",
                 "label": "תחומי פעילות"
             },
-            # {
-            #     "fieldname": "activity_domains",
-            #     "fieldtype": "Table",
-            #     "label": "תחומי פעילות",
-            #     "options": "Supplier Activity Domain"
-            # },
+            {
+                "fieldname": "activity_domains",
+                "fieldtype": "Table",
+                "label": "תחומי פעילות",
+                "options": "Supplier Activity Domain"
+            },
             {
                 "fieldname": "contact_section",
                 "fieldtype": "Section Break",

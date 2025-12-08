@@ -1,15 +1,18 @@
 import frappe
 
 @frappe.whitelist()
-def create_role_doctype():
-    """Create Role (תפקיד) DocType"""
-    if frappe.db.exists("DocType", "Role"):
-        frappe.msgprint("Role DocType already exists")
+def create_supplier_role_doctype():
+    """Create Supplier Role (תפקיד ספק) DocType
+
+    Note: Renamed from 'Role' to 'Supplier Role' to avoid conflict with Frappe's core Role DocType
+    """
+    if frappe.db.exists("DocType", "Supplier Role"):
+        frappe.msgprint("Supplier Role DocType already exists")
         return
 
     dt = frappe.get_doc({
         "doctype": "DocType",
-        "name": "Role",
+        "name": "Supplier Role",
         "module": "Siud",
         "autoname": "field:role_name",
         "naming_rule": "By fieldname",
@@ -41,4 +44,4 @@ def create_role_doctype():
     dt.insert(ignore_permissions=True)
     frappe.db.commit()
     frappe.clear_cache()
-    frappe.msgprint("Role DocType created successfully")
+    frappe.msgprint("Supplier Role DocType created successfully")

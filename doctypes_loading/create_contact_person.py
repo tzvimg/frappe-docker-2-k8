@@ -112,7 +112,7 @@ def create_contact_person_role_child():
                 "fieldname": "role",
                 "fieldtype": "Link",
                 "label": "תפקיד",
-                "options": "Role",
+                "options": "Supplier Role",
                 "in_list_view": 1,
                 "reqd": 1
             }

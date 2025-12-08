@@ -1,7 +1,7 @@
 import frappe
 
 # Import all creation functions
-from .create_role import create_role_doctype
+from .create_role import create_supplier_role_doctype
 from .create_activity_domain_category import create_activity_domain_category_doctype
 from .create_inquiry_topic_category import create_inquiry_topic_category_doctype
 from .create_supplier import create_supplier_doctype, create_supplier_activity_domain_child
@@ -25,9 +25,9 @@ def create_all_doctypes():
         # Step 1: Create independent master DocTypes
         frappe.msgprint("Creating independent master DocTypes...")
 
-        # Role - independent
-        create_role_doctype()
-        results.append("✓ Role DocType created")
+        # Supplier Role - independent
+        create_supplier_role_doctype()
+        results.append("✓ Supplier Role DocType created")
 
         # Activity Domain Category - independent
         create_activity_domain_category_doctype()
@@ -44,7 +44,7 @@ def create_all_doctypes():
         create_supplier_activity_domain_child()
         results.append("✓ Supplier Activity Domain child table created")
 
-        # Contact Person Role child (depends on Role)
+        # Contact Person Role child (depends on Supplier Role)
         create_contact_person_role_child()
         results.append("✓ Contact Person Role child table created")
 
@@ -55,11 +55,11 @@ def create_all_doctypes():
         create_supplier_doctype()
         results.append("✓ Supplier DocType created")
 
-        # Contact Person (depends on Supplier, Role, Contact Person Role child)
+        # Contact Person (depends on Supplier, Supplier Role, Contact Person Role child)
         create_contact_person_doctype()
         results.append("✓ Contact Person DocType created")
 
-        # Supplier Inquiry (depends on Supplier, Inquiry Topic Category, Role, User)
+        # Supplier Inquiry (depends on Supplier, Inquiry Topic Category, Supplier Role, User)
         create_supplier_inquiry_doctype()
         results.append("✓ Supplier Inquiry DocType created")
 
@@ -92,7 +92,7 @@ def delete_all_doctypes():
         "Supplier Activity Domain",
         "Inquiry Topic Category",
         "Activity Domain Category",
-        "Role"
+        "Supplier Role"
     ]
 
     results = []

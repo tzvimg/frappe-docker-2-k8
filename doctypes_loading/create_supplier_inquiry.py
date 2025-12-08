@@ -105,7 +105,7 @@ def create_supplier_inquiry_doctype():
                 "fieldname": "assigned_role",
                 "fieldtype": "Link",
                 "label": "שיוך לתפקיד מטפל בפניה",
-                "options": "Role"
+                "options": "Supplier Role"
             },
             {
                 "fieldname": "assigned_employee_id",

@@ -14,7 +14,9 @@
       "Bash(python -m pip install:*)",
       "Bash(python:*)",
       "Bash(./scripts/load.sh:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(chmod:*)",
+      "Bash(./run_doctype_script.sh:*)"
     ],
     "deny": [],
     "ask": []

@@ -20,28 +20,31 @@ This repository contains a **Frappe Framework** implementation for a Nursing Man
 
 **From Host Machine (Recommended):**
 ```bash
-./run_doctype_script.sh <module.function>
+./run_doctype_script.sh <subdirectory.module.function>
 
 # Examples:
-./run_doctype_script.sh create_all_entities.create_all_doctypes
-./run_doctype_script.sh create_supplier.create_supplier_doctype
+./run_doctype_script.sh creation.create_supplier_inquiry_workflow.create_all
+./run_doctype_script.sh creation.create_all_entities.create_all_doctypes
+./run_doctype_script.sh test_data.create_test_data.load_test_data
+./run_doctype_script.sh temp.verify_workflow.verify
 ```
 
 **Direct Command (from host or inside container):**
 ```bash
 # Inside container
-bench --site development.localhost execute siud.doctypes_loading.<module>.<function>
+bench --site development.localhost execute siud.doctypes_loading.<subdirectory>.<module>.<function>
 
 # From host
 docker exec frappe_docker_devcontainer-frappe-1 bash -c \
   "cd /workspace/development/frappe-bench && \
-   bench --site development.localhost execute siud.doctypes_loading.<module>.<function>"
+   bench --site development.localhost execute siud.doctypes_loading.<subdirectory>.<module>.<function>"
 ```
 
 **Command Pattern:**
 - **App:** `siud` (constant)
 - **Module Path:** `doctypes_loading` (constant)
-- **Variable:** `<module>.<function>` (e.g., `create_all_entities.create_all_doctypes`)
+- **Subdirectory:** `creation`, `test_data`, or `temp`
+- **Variable:** `<subdirectory>.<module>.<function>` (e.g., `creation.create_supplier_inquiry_workflow.create_all`)
 
 ## Development Environment
 
@@ -70,11 +73,22 @@ The `doctypes_loading/` directory from the host is mounted into the container fo
 - **Container path:** `/workspace/development/frappe-bench/apps/siud/siud/doctypes_loading/`
 - **Purpose:** Version-controlled DocType creation scripts that can be executed via `bench execute`
 
+**Directory Structure:**
+```
+doctypes_loading/
+├── creation/          # Production DocType and workflow creation scripts
+├── test_data/         # Test data loading scripts
+├── temp/              # Temporary/debugging utility scripts
+├── README.md          # Complete documentation
+└── QUICK_START.md     # Step-by-step setup guide
+```
+
 This mounting enables:
 1. Edit scripts on host with any IDE
 2. Execute scripts inside container with Frappe context
 3. Version control DocType schemas as code
 4. Reproducible environment setup
+5. Organized separation of creation, test data, and utility scripts
 
 ### Common Development Commands
 
@@ -104,8 +118,8 @@ bench --site development.localhost console
 bench start
 
 # Execute Python scripts from doctypes_loading/
-# Pattern: bench --site <SITE> execute <APP>.doctypes_loading.<script>.<function>
-bench --site development.localhost execute siud.doctypes_loading.create_all_entities.create_all_doctypes
+# Pattern: bench --site <SITE> execute <APP>.doctypes_loading.<subdirectory>.<script>.<function>
+bench --site development.localhost execute siud.doctypes_loading.creation.create_supplier_inquiry_workflow.create_all
 ```
 
 ### Command Shortcuts and Aliases
@@ -118,25 +132,26 @@ To minimize variation between commands and make them more abstract, you can crea
 alias bench-exec='bench --site development.localhost execute siud.doctypes_loading'
 
 # Usage becomes much simpler:
-bench-exec create_all_entities.create_all_doctypes
-bench-exec create_supplier.create_supplier_doctype
-bench-exec create_all_entities.delete_all_doctypes
+bench-exec creation.create_supplier_inquiry_workflow.create_all
+bench-exec creation.create_all_entities.create_all_doctypes
+bench-exec test_data.create_test_data.load_test_data
+bench-exec temp.verify_workflow.verify
 ```
 
 **Option 2: Helper Script (Included)**
 A helper script is provided at `/home/tzvi/frappe/run_doctype_script.sh` that abstracts away the container and path details:
 ```bash
 #!/bin/bash
-# Usage: ./run_doctype_script.sh <module.function>
-# Example: ./run_doctype_script.sh create_all_entities.create_all_doctypes
+# Usage: ./run_doctype_script.sh <subdirectory.module.function>
+# Example: ./run_doctype_script.sh creation.create_supplier_inquiry_workflow.create_all
 
 SITE="development.localhost"
 APP="siud"
 MODULE_PATH="doctypes_loading"
 
 if [ -z "$1" ]; then
-    echo "Usage: $0 <module.function>"
-    echo "Example: $0 create_all_entities.create_all_doctypes"
+    echo "Usage: $0 <subdirectory.module.function>"
+    echo "Example: $0 creation.create_supplier_inquiry_workflow.create_all"
     exit 1
 fi
 
@@ -146,9 +161,10 @@ bench --site "$SITE" execute "$APP.$MODULE_PATH.$1"
 Usage from host machine:
 ```bash
 # From /home/tzvi/frappe/
-./run_doctype_script.sh create_all_entities.create_all_doctypes
-./run_doctype_script.sh create_supplier.create_supplier_doctype
-./run_doctype_script.sh create_all_entities.delete_all_doctypes
+./run_doctype_script.sh creation.create_supplier_inquiry_workflow.create_all
+./run_doctype_script.sh creation.create_all_entities.create_all_doctypes
+./run_doctype_script.sh test_data.create_test_data.load_test_data
+./run_doctype_script.sh temp.verify_workflow.verify
 
 # Get help
 ./run_doctype_script.sh --help
@@ -157,7 +173,7 @@ Usage from host machine:
 The script automatically handles:
 - Docker container execution
 - Correct working directory
-- Full module path construction
+- Full module path construction (including subdirectory)
 - Success/failure feedback
 - Reminder to clear cache
 
@@ -173,8 +189,10 @@ def run(action):
     """Run DocType creation scripts"""
     # Maps simple names to full module paths
     actions = {
-        'create-all': 'siud.doctypes_loading.create_all_entities.create_all_doctypes',
-        'delete-all': 'siud.doctypes_loading.create_all_entities.delete_all_doctypes',
+        'create-all': 'siud.doctypes_loading.creation.create_supplier_inquiry_workflow.create_all',
+        'delete-all': 'siud.doctypes_loading.creation.create_supplier_inquiry_workflow.delete_all',
+        'load-test-data': 'siud.doctypes_loading.test_data.create_test_data.load_test_data',
+        'verify': 'siud.doctypes_loading.temp.verify_workflow.verify',
         # Add more mappings as needed
     }
 
@@ -214,6 +232,11 @@ if __name__ == '__main__':
 │   └── docs/                  # Docker setup documentation
 ├── doctype_creator/           # Legacy utility tools for DocType creation
 ├── doctypes_loading/          # DocType creation scripts (mounted into container)
+│   ├── creation/              # Production creation scripts
+│   ├── test_data/             # Test data loading scripts
+│   ├── temp/                  # Temporary/debugging utilities
+│   ├── README.md              # Complete documentation
+│   └── QUICK_START.md         # Step-by-step setup guide
 ├── run_doctype_script.sh      # Helper script to run DocType scripts with minimal variation
 ├── .claude/                   # Claude Code configuration
 └── CLAUDE.md                  # This file - project documentation
@@ -228,6 +251,11 @@ if __name__ == '__main__':
 │   │   ├── doctype/                # DocTypes directory
 │   │   │   └── (DocTypes are created here programmatically or via UI)
 │   │   ├── doctypes_loading/       # Mounted from host - DocType creation scripts
+│   │   │   ├── creation/           # Production creation scripts
+│   │   │   ├── test_data/          # Test data loading scripts
+│   │   │   ├── temp/               # Temporary/debugging utilities
+│   │   │   ├── README.md           # Complete documentation
+│   │   │   └── QUICK_START.md      # Step-by-step setup guide
 │   │   └── config/
 │   ├── hooks.py               # App lifecycle hooks
 │   ├── modules.txt
@@ -348,29 +376,44 @@ For creating multiple related DocTypes, use Python scripts in the `doctypes_load
 - Reproducible development environments
 - Automated setup scripts
 
+**Directory Organization:**
+
+Scripts are organized into subdirectories:
+- **`creation/`** - Production DocType and workflow creation scripts
+- **`test_data/`** - Test data loading scripts
+- **`temp/`** - Temporary/debugging utility scripts
+
 **Setup:**
 
-1. Create Python scripts in `/home/tzvi/frappe/doctypes_loading/` directory on the host machine
+1. Create Python scripts in `/home/tzvi/frappe/doctypes_loading/<subdirectory>/` directory on the host machine
 2. This directory is mounted into the container at `/workspace/development/frappe-bench/apps/siud/siud/doctypes_loading/`
 3. Scripts can be executed from the container using `bench execute`
 
 **Command Pattern:**
 ```bash
 # General pattern
-bench --site development.localhost execute siud.doctypes_loading.<module_name>.<function_name>
+bench --site development.localhost execute siud.doctypes_loading.<subdirectory>.<module_name>.<function_name>
 
-# Example: Create all entities
-bench --site development.localhost execute siud.doctypes_loading.create_all_entities.create_all_doctypes
+# Examples:
+# Create Supplier Inquiry workflow system
+bench --site development.localhost execute siud.doctypes_loading.creation.create_supplier_inquiry_workflow.create_all
+
+# Create all entities
+bench --site development.localhost execute siud.doctypes_loading.creation.create_all_entities.create_all_doctypes
+
+# Load test data
+bench --site development.localhost execute siud.doctypes_loading.test_data.create_test_data.load_test_data
 ```
 
 **Module Path Convention:**
 - App name: `siud` (constant across all commands)
 - Module path: `doctypes_loading` (constant across all commands)
-- Variable parts: `<module_name>.<function_name>`
+- Subdirectory: `creation`, `test_data`, or `temp`
+- Variable parts: `<subdirectory>.<module_name>.<function_name>`
 
 **Example Script Structure:**
 ```python
-# /home/tzvi/frappe/doctypes_loading/create_my_doctype.py
+# /home/tzvi/frappe/doctypes_loading/creation/create_my_doctype.py
 import frappe
 
 @frappe.whitelist()
@@ -399,17 +442,22 @@ def create_my_doctype():
     return {"success": True}
 
 # Run with:
-# bench --site development.localhost execute siud.doctypes_loading.create_my_doctype.create_my_doctype
+# bench --site development.localhost execute siud.doctypes_loading.creation.create_my_doctype.create_my_doctype
 ```
 
-**Master Script Pattern (create_all_entities.py):**
+**Master Script Pattern:**
 
 For complex systems with multiple dependent DocTypes, create a master script that:
 1. Imports individual creation functions
 2. Executes them in dependency order
 3. Provides status feedback
 
-See `doctypes_loading/create_all_entities.py` for a complete example.
+**Primary Master Scripts:**
+- `doctypes_loading/creation/create_supplier_inquiry_workflow.py` - Complete Supplier Inquiry system
+- `doctypes_loading/creation/create_all_entities.py` - All core DocTypes
+
+**Quick Start from Zero:**
+See `doctypes_loading/QUICK_START.md` for step-by-step guide to rebuild the entire system.
 
 **Advantages:**
 - Version control for DocType schemas
@@ -552,7 +600,12 @@ print(providers)
 ```
 
 ### Automated Testing
-Custom test scripts can be created in Python using Frappe's test framework or as standalone scripts in the `doctypes_loading/` directory. These scripts can be executed using the `bench execute` command pattern described above.
+Custom test scripts can be created in Python using Frappe's test framework or as standalone scripts in the `doctypes_loading/test_data/` or `doctypes_loading/temp/` directories. These scripts can be executed using the `bench execute` command pattern described above.
+
+**Example test/verification scripts:**
+- `doctypes_loading/temp/verify_workflow.py` - Verify workflow configuration
+- `doctypes_loading/temp/inspect_supplier_inquiry.py` - Inspect Supplier Inquiry DocType
+- `doctypes_loading/test_data/create_test_data.py` - Load sample test data
 
 ## Important Notes
 

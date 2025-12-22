@@ -16,7 +16,10 @@
       "Bash(./scripts/load.sh:*)",
       "Bash(ls:*)",
       "Bash(chmod:*)",
-      "Bash(./run_doctype_script.sh:*)"
+      "Bash(./run_doctype_script.sh:*)",
+      "Bash(cat:*)",
+      "Bash(python3:*)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

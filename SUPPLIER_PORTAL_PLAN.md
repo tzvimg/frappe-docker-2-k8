@@ -56,22 +56,22 @@ Create a WebForm-based portal for suppliers to submit inquiries, track their pro
 - [x] Add `has_website_permission(doc, ptype, user, verbose=False)` function
 - [x] Logic: Portal users only see their linked supplier record
 
-### Phase 3: WebForm for Inquiries (3-4 hours)
+### Phase 3: WebForm for Inquiries (3-4 hours) ✅ COMPLETED
 
 #### 3.1 Create Supplier Inquiry WebForm
-- [ ] **Option A**: Manual UI creation (recommended)
-  - Navigate to: `/app/web-form/new`
-  - Title: "פניית ספק", Route: "supplier-inquiry-form"
-  - Published: ✓, Login Required: ✓, Apply Document Permissions: ✓
-  - Fields: supplier_link (read-only), topic_category, inquiry_description, inquiry_context, attachments
-  - Hide internal fields: inquiry_status, assigned_role, response_text, internal_notes
-  - Client script: Auto-populate supplier_link from `frappe.session.user`
-  - List settings: Show list, title "הפניות שלי", columns: name, topic_category, inquiry_status, creation
-
-- [ ] **Option B**: Programmatic creation
-  - Create `/home/tzvi/frappe/doctypes_loading/creation/create_supplier_inquiry_webform.py`
+- [x] **Option B**: Programmatic creation (COMPLETED)
+  - Created `/home/tzvi/frappe/doctypes_loading/creation/create_supplier_inquiry_webform.py`
   - Function: `create_supplier_inquiry_webform()`
   - Run: `./run_doctype_script.sh creation.create_supplier_inquiry_webform.create_supplier_inquiry_webform`
+  - WebForm Details:
+    - Title: "פניית ספק"
+    - Route: `/supplier-inquiry-form`
+    - Published: ✓, Login Required: ✓, Apply Document Permissions: ✓
+    - Fields included: supplier_link (read-only), topic_category, inquiry_description, inquiry_context, insured_id_number, insured_full_name, attachments
+    - Internal fields hidden: inquiry_status, assigned_role, assigned_employee_id, response_text, response_attachments
+    - Client script added: Auto-populates supplier_link from User.supplier_link
+    - List settings: Shows list with title "הפניות שלי", columns: name, topic_category, inquiry_status, creation
+    - Success message and introduction text in Hebrew
 
 ### Phase 4: Portal Navigation & Dashboard (4-5 hours)
 
@@ -180,8 +180,14 @@ Create in `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/si
   - [x] Implemented has_website_permission() in Supplier controller
   - [x] Data access control ensures users only see their own supplier data
 
-**Session 3** - [Date]
-- [ ] Phase 3 implementation
+**Session 3** - 2025-12-22
+- [x] Phase 3 implementation (COMPLETED)
+  - [x] Created webform creation script at `/home/tzvi/frappe/doctypes_loading/creation/create_supplier_inquiry_webform.py`
+  - [x] Executed script successfully: WebForm "פניית-ספק" created
+  - [x] Auto-populate client script added for supplier_link field
+  - [x] WebForm configured with Hebrew labels, introduction text, and success message
+  - [x] Applied document permissions for data isolation
+  - [x] List view configured to show inquiry history
 - [ ] Phase 4 implementation
 
 **Session 4** - [Date]
@@ -197,6 +203,7 @@ Create in `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/si
 - **Admin-Created Accounts**: Self-registration deferred to v2 for security simplicity
 - **4-Layer Security**: Comprehensive approach ensures data isolation
 - **Automated Permission Setup**: Created `add_portal_permissions.py` script to automate permission configuration instead of manual UI updates (more repeatable and version-controlled)
+- **Programmatic WebForm Creation**: Chose Option B (programmatic) over manual UI creation for consistency with Phase 1 & 2 approach, repeatability, and version control
 
 ### Known Issues
 - None yet
@@ -206,4 +213,4 @@ Create in `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/si
 
 ---
 
-**Next Steps**: Phase 1 & 2 COMPLETED. Next: Phase 3 - Create Supplier Inquiry WebForm
+**Next Steps**: Phases 1, 2 & 3 COMPLETED. Next: Phase 4 - Portal Navigation & Dashboard

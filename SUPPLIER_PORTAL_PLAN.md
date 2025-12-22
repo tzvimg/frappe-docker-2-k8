@@ -44,17 +44,17 @@ Create a WebForm-based portal for suppliers to submit inquiries, track their pro
 - [x] **Supplier Inquiry**: Added "Supplier Portal User" role with Read, Write, Create, Email, Print permissions + "If Owner" flag
 - [x] **Supplier**: Added "Supplier Portal User" role with Read, Write permissions + "If Owner" flag
 
-### Phase 2: Data Access Control (2-3 hours)
+### Phase 2: Data Access Control (2-3 hours) ✅ COMPLETED
 
 #### 2.1 Implement Supplier Inquiry Permissions
-- [ ] Modify: `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/siud/siud/doctype/supplier_inquiry/supplier_inquiry.py`
-- [ ] Add `has_website_permission(doc, ptype, user, verbose=False)` function
-- [ ] Logic: Portal users only see inquiries where `doc.supplier_link == User.supplier_link`
+- [x] Modify: `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/siud/siud/doctype/supplier_inquiry/supplier_inquiry.py`
+- [x] Add `has_website_permission(doc, ptype, user, verbose=False)` function
+- [x] Logic: Portal users only see inquiries where `doc.supplier_link == User.supplier_link`
 
 #### 2.2 Implement Supplier Permissions
-- [ ] Modify: `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/siud/siud/doctype/supplier/supplier.py`
-- [ ] Add `has_website_permission(doc, ptype, user, verbose=False)` function
-- [ ] Logic: Portal users only see their linked supplier record
+- [x] Modify: `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/siud/siud/doctype/supplier/supplier.py`
+- [x] Add `has_website_permission(doc, ptype, user, verbose=False)` function
+- [x] Logic: Portal users only see their linked supplier record
 
 ### Phase 3: WebForm for Inquiries (3-4 hours)
 
@@ -175,7 +175,10 @@ Create in `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/si
   - [x] Created portal role "Supplier Portal User" with desk_access=0
   - [x] Added supplier_link custom field to User DocType
   - [x] Added portal permissions to Supplier Inquiry and Supplier DocTypes
-- [ ] Phase 2 implementation (Next)
+- [x] Phase 2 implementation (COMPLETED)
+  - [x] Implemented has_website_permission() in Supplier Inquiry controller
+  - [x] Implemented has_website_permission() in Supplier controller
+  - [x] Data access control ensures users only see their own supplier data
 
 **Session 3** - [Date]
 - [ ] Phase 3 implementation
@@ -203,4 +206,4 @@ Create in `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/si
 
 ---
 
-**Next Steps**: Start with Phase 1 - Create portal role and user-supplier link
+**Next Steps**: Phase 1 & 2 COMPLETED. Next: Phase 3 - Create Supplier Inquiry WebForm

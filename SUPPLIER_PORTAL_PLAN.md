@@ -73,31 +73,33 @@ Create a WebForm-based portal for suppliers to submit inquiries, track their pro
     - List settings: Shows list with title "הפניות שלי", columns: name, topic_category, inquiry_status, creation
     - Success message and introduction text in Hebrew
 
-### Phase 4: Portal Navigation & Dashboard (4-5 hours)
+### Phase 4: Portal Navigation & Dashboard (4-5 hours) ✅ COMPLETED
 
 #### 4.1 Configure Portal Menu
-- [ ] Modify: `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/siud/hooks.py`
-- [ ] Add `standard_portal_menu_items` with 4 menu items:
+- [x] Modify: `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/siud/hooks.py`
+- [x] Add `standard_portal_menu_items` with 4 menu items:
   - דף הבית → /supplier-dashboard
   - הפניות שלי → /supplier-inquiry-form/list
   - פנייה חדשה → /supplier-inquiry-form/new
   - פרופיל הספק → /supplier-profile
-- [ ] Add `role_home_page = {"Supplier Portal User": "supplier-dashboard"}`
-- [ ] Run: `bench --site development.localhost clear-cache && bench restart`
-- [ ] Sync via UI: Portal Settings → Sync Menu → Enable items → Save
+- [x] Add `role_home_page = {"Supplier Portal User": "supplier-dashboard"}`
+- [x] Run: `bench --site development.localhost clear-cache && bench build --app siud`
+- [ ] Sync via UI: Portal Settings → Sync Menu → Enable items → Save (Manual step for user)
 
 #### 4.2 Create Portal Pages
 Create in `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/siud/www/`:
 
-- [ ] **supplier-dashboard.html** + **.py**
+- [x] **supplier-dashboard.html** + **.py**
   - Display: Welcome message, inquiry statistics (total/open/closed), recent inquiries list
   - Quick actions: New inquiry button, View all inquiries link
+  - Implementation: Python backend fetches supplier data and inquiry stats; HTML template displays dashboard with RTL Hebrew UI
 
-- [ ] **supplier-profile.html** + **.py**
+- [x] **supplier-profile.html** + **.py**
   - Display: Supplier details (ID read-only, name/phone/email/address editable)
-  - Form with save via `frappe.client.set_value` API
+  - Form with save via AJAX call to server-side `update_supplier_profile()` function
+  - Implementation: Includes form validation, loading spinner, success/error alerts, and security checks
 
-- [ ] Run: `bench --site development.localhost clear-cache && bench build --app siud`
+- [x] Run: `bench --site development.localhost clear-cache && bench build --app siud`
 
 ### Phase 5: Testing & User Setup (2-3 hours)
 
@@ -188,7 +190,14 @@ Create in `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/si
   - [x] WebForm configured with Hebrew labels, introduction text, and success message
   - [x] Applied document permissions for data isolation
   - [x] List view configured to show inquiry history
-- [ ] Phase 4 implementation
+- [x] Phase 4 implementation (COMPLETED)
+  - [x] Modified hooks.py to add portal menu configuration
+  - [x] Created role_home_page setting for "Supplier Portal User" → supplier-dashboard
+  - [x] Created supplier-dashboard.py with inquiry statistics logic (total/open/closed counts, recent inquiries)
+  - [x] Created supplier-dashboard.html with RTL Hebrew UI, statistics cards, and quick action buttons
+  - [x] Created supplier-profile.py with profile data retrieval and update_supplier_profile() function
+  - [x] Created supplier-profile.html with editable form, AJAX save, validation, and security checks
+  - [x] Cleared cache and built app successfully
 
 **Session 4** - [Date]
 - [ ] Phase 5 implementation
@@ -213,4 +222,4 @@ Create in `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/si
 
 ---
 
-**Next Steps**: Phases 1, 2 & 3 COMPLETED. Next: Phase 4 - Portal Navigation & Dashboard
+**Next Steps**: Phases 1, 2, 3 & 4 COMPLETED. Next: Phase 5 - Testing & User Setup

@@ -27,20 +27,22 @@ Create a WebForm-based portal for suppliers to submit inquiries, track their pro
 ### Phase 1: Foundation - Roles & Permissions (2-3 hours)
 
 #### 1.1 Create Portal Role
-- [ ] Create `/home/tzvi/frappe/doctypes_loading/creation/create_portal_roles.py`
-- [ ] Function: `create_portal_roles()` - creates "Supplier Portal User" role with `desk_access=0`
-- [ ] Run: `./run_doctype_script.sh creation.create_portal_roles.create_portal_roles`
+- [x] Create `/home/tzvi/frappe/doctypes_loading/creation/create_portal_roles.py`
+- [x] Function: `create_portal_roles()` - creates "Supplier Portal User" role with `desk_access=0`
+- [x] Run: `./run_doctype_script.sh creation.create_portal_roles.create_portal_roles`
 
 #### 1.2 Link Users to Suppliers
-- [ ] Create `/home/tzvi/frappe/doctypes_loading/creation/add_supplier_link_to_user.py`
-- [ ] Function: `add_supplier_link_custom_field()` - adds "supplier_link" custom field to User DocType
-- [ ] Run: `./run_doctype_script.sh creation.add_supplier_link_to_user.add_supplier_link_custom_field`
-- [ ] Run: `bench --site development.localhost clear-cache`
+- [x] Create `/home/tzvi/frappe/doctypes_loading/creation/add_supplier_link_to_user.py`
+- [x] Function: `add_supplier_link_custom_field()` - adds "supplier_link" custom field to User DocType
+- [x] Run: `./run_doctype_script.sh creation.add_supplier_link_to_user.add_supplier_link_custom_field`
+- [x] Run: `bench --site development.localhost clear-cache`
 
-#### 1.3 Update DocType Permissions (Manual via UI)
-- [ ] **Supplier Inquiry**: Add "Supplier Portal User" role with Read, Write, Create, Email, Print permissions + "If Owner" flag
-- [ ] **Supplier**: Add "Supplier Portal User" role with Read, Write permissions + "If Owner" flag
-- [ ] Navigate to each DocType → Permissions section → Add permission row → Save
+#### 1.3 Update DocType Permissions (Automated via Script)
+- [x] Create `/home/tzvi/frappe/doctypes_loading/creation/add_portal_permissions.py`
+- [x] Function: `add_portal_permissions()` - adds permissions programmatically
+- [x] Run: `./run_doctype_script.sh creation.add_portal_permissions.add_portal_permissions`
+- [x] **Supplier Inquiry**: Added "Supplier Portal User" role with Read, Write, Create, Email, Print permissions + "If Owner" flag
+- [x] **Supplier**: Added "Supplier Portal User" role with Read, Write permissions + "If Owner" flag
 
 ### Phase 2: Data Access Control (2-3 hours)
 
@@ -166,11 +168,14 @@ Create in `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/si
 - [x] Requirements gathering
 - [x] Codebase exploration
 - [x] Plan creation
-- [ ] Implementation starts in next session
+- [x] Implementation starts in next session
 
-**Session 2** - [Date]
-- [ ] Phase 1 implementation
-- [ ] Phase 2 implementation
+**Session 2** - 2025-12-22
+- [x] Phase 1 implementation (COMPLETED)
+  - [x] Created portal role "Supplier Portal User" with desk_access=0
+  - [x] Added supplier_link custom field to User DocType
+  - [x] Added portal permissions to Supplier Inquiry and Supplier DocTypes
+- [ ] Phase 2 implementation (Next)
 
 **Session 3** - [Date]
 - [ ] Phase 3 implementation
@@ -188,6 +193,7 @@ Create in `/home/tzvi/frappe/frappe_docker/development/frappe-bench/apps/siud/si
 - **WebForms over Custom Pages**: Chosen for faster implementation and built-in RTL support
 - **Admin-Created Accounts**: Self-registration deferred to v2 for security simplicity
 - **4-Layer Security**: Comprehensive approach ensures data isolation
+- **Automated Permission Setup**: Created `add_portal_permissions.py` script to automate permission configuration instead of manual UI updates (more repeatable and version-controlled)
 
 ### Known Issues
 - None yet

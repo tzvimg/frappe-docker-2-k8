@@ -19,7 +19,9 @@
       "Bash(./run_doctype_script.sh:*)",
       "Bash(cat:*)",
       "Bash(python3:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(curl:*)",
+      "Bash(docker restart:*)"
     ],
     "deny": [],
     "ask": []

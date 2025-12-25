@@ -8,17 +8,33 @@ Based on: `doctypes_loading/creation/create_supplier_inquiry_workflow.py`
 
 ### Critical Success Factors:
 
-1. **`doc_status` MUST be a STRING, not int**
+1. **Create Workflow State documents FIRST** ⚠️ **CRITICAL**
+   - Before creating a Workflow, you must create Workflow State documents
+   - Each state name must exist as a separate Workflow State document
+   - See "Step 0" in the template below
+
+2. **`doc_status` MUST be a STRING, not int**
    - ✓ Correct: `'doc_status': '0'`
    - ✗ Wrong: `'doc_status': 0`
 
-2. **Add states and transitions in the initial `frappe.get_doc()` call**
+3. **NEVER use `doc_status: '2'` in workflows** ⚠️ **CRITICAL**
+   - ✓ Use '0' for draft/editable states
+   - ✓ Use '1' for final states (completed, cancelled, closed)
+   - ✗ **DON'T** use '2' - causes "Illegal Document Status" error
+   - This pattern is confirmed from working Supplier Inquiry workflow
+
+4. **`allow_edit` cannot be empty string**
+   - ✓ Use 'All' for states that anyone can edit
+   - ✓ Use specific role like 'System Manager' for restricted states
+   - ✗ Empty string '' causes "Mandatory Error"
+
+5. **Use `frappe.flags.ignore_links = True`**
+   - Prevents link validation errors during insert
+   - Must be set before insert and reset after
+
+6. **Add states and transitions in the initial `frappe.get_doc()` call**
    - Don't use `workflow.append()` after creation
    - Include all child tables in the initial dictionary
-
-3. **States and transitions reference each other by name (string matching)**
-   - Frappe validates that transition `state` and `next_state` exist in the states list
-   - This is why the names must match exactly
 
 ### Working Template:
 
@@ -29,7 +45,18 @@ import frappe
 def create_workflow():
     """Create workflow - tested pattern"""
 
-    # Check if exists
+    # STEP 0: Create Workflow State documents FIRST (CRITICAL!)
+    state_names = ['Draft', 'Pending', 'Approved', 'Rejected']
+    for state_name in state_names:
+        if not frappe.db.exists('Workflow State', state_name):
+            state = frappe.get_doc({
+                'doctype': 'Workflow State',
+                'workflow_state_name': state_name
+            })
+            state.insert(ignore_permissions=True)
+    frappe.db.commit()
+
+    # Check if workflow exists
     if frappe.db.exists("Workflow", "My Workflow"):
         frappe.msgprint("Workflow already exists")
         return {"success": False, "message": "Already exists"}
@@ -58,13 +85,13 @@ def create_workflow():
             },
             {
                 'state': 'Approved',
-                'doc_status': '1',  # Submitted
-                'allow_edit': '',  # Empty = no edit
+                'doc_status': '1',  # Submitted/Final
+                'allow_edit': 'System Manager',  # Can't be empty
             },
             {
                 'state': 'Rejected',
-                'doc_status': '2',  # Cancelled
-                'allow_edit': '',
+                'doc_status': '1',  # Use '1', NOT '2'!
+                'allow_edit': 'System Manager',  # Can't be empty
             },
         ],
 
@@ -107,8 +134,11 @@ def create_workflow():
 
 | Error | Cause | Fix |
 |-------|-------|-----|
-| "Could not find Row #1: State..." | `doc_status` is int instead of string | Change `0` to `'0'` |
-| Link validation errors | States/transitions added via `append()` after insert | Add all in initial `frappe.get_doc()` dict |
+| "Workflow State [Name] not found" | Workflow State documents don't exist | Create Workflow State documents BEFORE creating workflow |
+| "Illegal Document Status for Cancelled" | Using `doc_status: '2'` in workflow | Use `doc_status: '1'` for all final states (cancelled, rejected, closed) |
+| "allow_edit, allow_edit" (Mandatory) | Empty string for `allow_edit` | Use 'All' or specific role like 'System Manager' |
+| "Could not find Row #1: State..." | Link validation or missing states | Use `frappe.flags.ignore_links = True` before insert |
+| `doc_status` type error | `doc_status` is int instead of string | Change `0` to `'0'` (string) |
 | State not found in transitions | Typo in state name | Ensure exact match between states and transitions |
 | Workflow doesn't appear | `workflow_state_field` doesn't match DocType field | Check field name in DocType |
 

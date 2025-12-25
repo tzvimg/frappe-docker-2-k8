@@ -1,0 +1,19 @@
+{
+  "name": "frappe-dev",
+  "version": "1.0.0",
+  "description": "Expert guidance for Frappe Framework development with Docker containers. Handles DocType creation, bench commands, workflow setup, test data loading, and Hebrew (RTL) interface configuration. Use when working with Frappe DocTypes, service providers, caregivers, contracts, or the Nursing Management System (Siud app).",
+  "tags": ["frappe", "doctype", "python", "docker", "hebrew", "rtl", "nursing", "siud"],
+  "triggers": [
+    "doctype",
+    "frappe",
+    "service provider",
+    "caregiver",
+    "contract",
+    "workflow",
+    "siud",
+    "nursing management",
+    "bench",
+    "hebrew"
+  ],
+  "type": "project"
+}

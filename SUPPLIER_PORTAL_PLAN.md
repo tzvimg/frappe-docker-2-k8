@@ -219,6 +219,93 @@ Test credentials and checklist available at `/home/tzvi/frappe/SUPPLIER_PORTAL_T
   - [x] Testing checklist includes: Portal access, data isolation, profile editing, inquiry submission, desk restriction, cross-supplier access, RTL interface
 - [ ] Manual testing (to be performed by user)
 
+**Session 5** - 2025-12-24
+- [x] Bug fix: Dashboard inquiry links not working
+  - [x] Identified issue: WebForm had `allow_edit=0`, preventing viewing of individual inquiries
+  - [x] Created `/home/tzvi/frappe/doctypes_loading/creation/enable_webform_edit.py` script
+  - [x] Enabled `allow_edit=1` on "פניית-ספק" WebForm
+  - [x] Cleared cache to apply changes
+  - [x] Dashboard links to `/supplier-inquiry-form/{{ inquiry.name }}` now work correctly
+  - [x] Suppliers can now view and edit their existing inquiries from the dashboard
+- [x] Bug fix: "Not permitted" error when viewing inquiries
+  - [x] Identified root cause: "If Owner" flag on permissions prevented access (inquiries owned by Administrator)
+  - [x] Created diagnostic script `/home/tzvi/frappe/doctypes_loading/temp/check_inquiry_permissions.py`
+  - [x] Verified that `has_website_permission()` function works correctly
+  - [x] Created `/home/tzvi/frappe/doctypes_loading/creation/fix_portal_permissions.py` to fix Supplier Inquiry permissions
+  - [x] Created `/home/tzvi/frappe/doctypes_loading/creation/fix_supplier_permissions.py` to fix Supplier permissions
+  - [x] Removed "If Owner" flag from both DocTypes (replaced with `if_owner=0`)
+  - [x] Security now properly handled by `has_website_permission()` checking supplier_link
+  - [x] Cleared cache to apply permission changes
+  - [x] Portal users can now view their inquiries regardless of who created them
+- [x] Bug fix: WebForm list showing all inquiries instead of filtered by supplier
+  - [x] Identified issue: WebForm list view wasn't applying supplier-based filtering
+  - [x] Added `get_list_context()` function to `supplier_inquiry.py` controller
+  - [x] Function filters list by current user's `supplier_link` field
+  - [x] Cleared cache to apply changes
+  - [x] WebForm list at `/supplier-inquiry-form/list` now shows only supplier's inquiries
+- [x] Bug fix: Grid headers showing "undefined" in list view
+  - [x] Identified issue: WebForm list columns had no labels set (all were `None`)
+  - [x] Created `/home/tzvi/frappe/doctypes_loading/creation/fix_webform_list_columns.py` script
+  - [x] Added Hebrew labels to all list columns:
+    - name → "מספר פנייה"
+    - topic_category → "קטגורית נושא"
+    - inquiry_status → "סטטוס"
+    - creation → "תאריך יצירה"
+  - [x] Cleared cache to apply changes
+  - [x] List view now displays proper Hebrew column headers
+- [x] UI Enhancement: Removed sidebar and footer from portal
+  - [x] Added CSS to hide sidebar (`.web-sidebar`, `.sidebar`, `.page-sidebar`)
+  - [x] Added CSS to hide footer (`.web-footer`, `footer`)
+  - [x] Made main content full width by removing left/right margins
+  - [x] Applied changes to both `supplier_dashboard.html` and `supplier-profile.html`
+  - [x] Portal now displays clean interface without Frappe branding
+- [x] UI Enhancement: Added user menu to dashboard header
+  - [x] Updated `supplier_dashboard.py` to add user info (`user_name`, `user_email`) to context
+  - [x] Updated `supplier-profile.py` to add user info to context
+  - [x] Created custom user dropdown menu in dashboard header with:
+    - User avatar icon and name display
+    - Dropdown showing user's full name and email
+    - "הפרופיל שלי" (My Profile) link
+    - "התנתק" (Logout) link
+  - [x] Added matching user menu to supplier-profile page header with:
+    - "חזרה לדף הבית" (Back to Dashboard) button
+    - Same user dropdown menu
+    - Active state indicator on current page
+  - [x] Implemented dropdown toggle JavaScript functionality
+  - [x] Styled dropdown with modern design matching header gradient
+  - [x] Added click-outside-to-close behavior
+  - [x] Cleared cache and rebuilt app
+  - [x] User menu now accessible from header on all portal pages
+- [x] UI Enhancement: Improved user menu button to avatar style
+  - [x] Added initials generation logic in both Python files (`supplier_dashboard.py`, `supplier-profile.py`)
+  - [x] Logic extracts first letter of first name and last name (or first 2 letters if single name)
+  - [x] Replaced text button with circular avatar displaying user initials
+  - [x] Styled avatar with:
+    - 44px circular design
+    - White gradient background
+    - Purple text color matching theme
+    - Border with semi-transparent white
+    - Drop shadow and hover scale animation
+  - [x] Updated dropdown to align right under avatar
+  - [x] Applied changes to both dashboard and profile pages
+  - [x] Cleared cache and rebuilt app
+  - [x] Avatar now displays user initials in modern circular button
+- [x] UI Enhancement: Minimalist clean interface - removed decorative headers
+  - [x] Removed large purple gradient header from dashboard page
+  - [x] Removed decorative header from profile page
+  - [x] Created minimal white top bar with just user avatar menu
+  - [x] Made top bar sticky for easy access to user menu while scrolling
+  - [x] Updated avatar styling:
+    - Changed from white gradient to purple gradient background
+    - Changed text color from purple to white
+    - Updated border and shadow for light background
+  - [x] Profile page: Added "חזרה לדף הבית" button in top bar
+  - [x] Profile page: Moved page title into main content area
+  - [x] Dashboard: Content now starts immediately with statistics cards
+  - [x] Clean, focused interface with maximum space for dashboard content
+  - [x] Cleared cache and rebuilt app
+  - [x] Portal now displays minimal UI with focus on content
+
 ---
 
 ## Notes & Decisions

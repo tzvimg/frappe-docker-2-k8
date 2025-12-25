@@ -237,6 +237,28 @@ frappe.db.commit()
 - Internal Reviewer (staff)
 - HQ Approver (management)
 
+### Creating Workflows and Workspaces Programmatically
+
+**CRITICAL:** Workflows and Workspaces have specific requirements for successful programmatic creation.
+
+**📖 See `TESTED_PATTERNS.md` for production-tested working patterns**
+
+**Quick Reference:**
+
+**Workflows - Common Pitfalls:**
+- ✗ Using `'doc_status': 0` (int) → ✓ Use `'doc_status': '0'` (string)
+- ✗ Using `workflow.append('states', ...)` → ✓ Include all states/transitions in initial `frappe.get_doc()` dict
+- ✗ State name mismatches → ✓ Ensure exact match between states and transitions
+
+**Workspaces - Common Pitfalls:**
+- ✗ Not setting `name` field → ✓ Set both `"name"` and `"label"` explicitly
+- ✗ Missing metadata → ✓ Include `creation`, `modified`, `owner`, `modified_by`
+- ✗ Not clearing cache → ✓ Run `frappe.clear_cache()` after creation
+
+**Working Examples:**
+- Workflow: `doctypes_loading/creation/create_supplier_inquiry_workflow.py`
+- Workspace: `doctypes_loading/creation/create_siud_workspace_complete.py`
+
 ## Python Controllers
 
 Controllers define business logic and validations:

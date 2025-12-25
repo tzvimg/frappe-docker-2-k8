@@ -1,0 +1,1 @@
+/home/tzvi/frappe/.claude/skills/frappe-dev/run_doctype_script.sh

@@ -1,0 +1,1 @@
+/home/tzvi/frappe/.claude/skills/frappe-dev/clear_cache.sh

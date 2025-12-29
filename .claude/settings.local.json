@@ -22,7 +22,8 @@
       "WebSearch",
       "Bash(curl:*)",
       "Bash(docker restart:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "WebFetch(domain:docs.frappe.io)"
     ],
     "deny": [],
     "ask": []

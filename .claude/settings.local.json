@@ -23,7 +23,11 @@
       "Bash(curl:*)",
       "Bash(docker restart:*)",
       "Bash(tree:*)",
-      "WebFetch(domain:docs.frappe.io)"
+      "WebFetch(domain:docs.frappe.io)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(npm ls:*)"
     ],
     "deny": [],
     "ask": []

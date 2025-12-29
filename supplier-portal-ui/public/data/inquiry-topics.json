@@ -1,0 +1,26 @@
+[
+  {
+    "name": "PROF",
+    "category_code": "PROF",
+    "category_name": "נושאים מקצועיים",
+    "parent_inquiry_topic_category": null
+  },
+  {
+    "name": "COMP",
+    "category_code": "COMP",
+    "category_name": "תלונות",
+    "parent_inquiry_topic_category": null
+  },
+  {
+    "name": "ACCT",
+    "category_code": "ACCT",
+    "category_name": "חשבונות שוטפים",
+    "parent_inquiry_topic_category": null
+  },
+  {
+    "name": "GEN",
+    "category_code": "GEN",
+    "category_name": "פניות כלליות",
+    "parent_inquiry_topic_category": null
+  }
+]

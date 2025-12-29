@@ -1,0 +1,32 @@
+[
+  {
+    "value": "פתוחה",
+    "label": "פתוחה",
+    "type": "open"
+  },
+  {
+    "value": "בטיפול",
+    "label": "בטיפול",
+    "type": "open"
+  },
+  {
+    "value": "ממתינה לתגובת ספק",
+    "label": "ממתינה לתגובת ספק",
+    "type": "open"
+  },
+  {
+    "value": "טופלה",
+    "label": "טופלה",
+    "type": "closed"
+  },
+  {
+    "value": "נסגרה",
+    "label": "נסגרה",
+    "type": "closed"
+  },
+  {
+    "value": "נדחתה",
+    "label": "נדחתה",
+    "type": "closed"
+  }
+]

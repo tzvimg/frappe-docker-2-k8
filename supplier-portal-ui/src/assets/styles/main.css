@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* RTL base styles */
+html {
+  direction: rtl;
+}
+
+body {
+  font-family: 'Rubik', sans-serif;
+  @apply bg-gray-50 text-gray-900;
+}
+
+/* RTL-specific overrides */
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Form inputs RTL alignment */
+input,
+textarea,
+select {
+  text-align: right;
+}
+
+/* Table RTL alignment */
+table {
+  direction: rtl;
+}
+
+th,
+td {
+  text-align: right;
+}
+
+/* Button icon spacing for RTL */
+.btn-icon-right {
+  @apply flex-row-reverse;
+}
+
+/* Card shadows */
+.card {
+  @apply bg-white rounded-lg shadow-sm border border-gray-200;
+}
+
+/* Status badge base styles */
+.status-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.status-badge-open {
+  @apply bg-blue-100 text-blue-800;
+}
+
+.status-badge-closed {
+  @apply bg-gray-100 text-gray-800;
+}
+
+.status-badge-pending {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+/* Loading spinner */
+.spinner {
+  @apply animate-spin rounded-full border-2 border-gray-300 border-t-blue-600;
+}

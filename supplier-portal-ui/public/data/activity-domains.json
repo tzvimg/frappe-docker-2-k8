@@ -1,0 +1,27 @@
+[
+  {
+    "name": "BA",
+    "category_code": "BA",
+    "category_name": "בית אבות"
+  },
+  {
+    "name": "MY",
+    "category_code": "MY",
+    "category_name": "מרכזי יום"
+  },
+  {
+    "name": "SB",
+    "category_code": "SB",
+    "category_name": "סיעוד ביתי"
+  },
+  {
+    "name": "KT",
+    "category_code": "KT",
+    "category_name": "קהילה תומכת"
+  },
+  {
+    "name": "SH",
+    "category_code": "SH",
+    "category_name": "שיקום"
+  }
+]

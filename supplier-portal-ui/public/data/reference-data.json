@@ -1,0 +1,125 @@
+{
+  "activity_domains": [
+    {
+      "name": "BA",
+      "category_code": "BA",
+      "category_name": "בית אבות"
+    },
+    {
+      "name": "MY",
+      "category_code": "MY",
+      "category_name": "מרכזי יום"
+    },
+    {
+      "name": "SB",
+      "category_code": "SB",
+      "category_name": "סיעוד ביתי"
+    },
+    {
+      "name": "KT",
+      "category_code": "KT",
+      "category_name": "קהילה תומכת"
+    },
+    {
+      "name": "SH",
+      "category_code": "SH",
+      "category_name": "שיקום"
+    }
+  ],
+  "inquiry_topics": [
+    {
+      "name": "PROF",
+      "category_code": "PROF",
+      "category_name": "נושאים מקצועיים",
+      "parent_inquiry_topic_category": null
+    },
+    {
+      "name": "COMP",
+      "category_code": "COMP",
+      "category_name": "תלונות",
+      "parent_inquiry_topic_category": null
+    },
+    {
+      "name": "ACCT",
+      "category_code": "ACCT",
+      "category_name": "חשבונות שוטפים",
+      "parent_inquiry_topic_category": null
+    },
+    {
+      "name": "GEN",
+      "category_code": "GEN",
+      "category_name": "פניות כלליות",
+      "parent_inquiry_topic_category": null
+    }
+  ],
+  "supplier_roles": [
+    {
+      "name": "אחות מוסמכת",
+      "role_name": "אחות מוסמכת",
+      "role_title_he": "אחות מוסמכת"
+    },
+    {
+      "name": "מנהל כללי",
+      "role_name": "מנהל כללי",
+      "role_title_he": "מנהל כללי"
+    },
+    {
+      "name": "מנהל משאבי אנוש",
+      "role_name": "מנהל משאבי אנוש",
+      "role_title_he": "מנהל משאבי אנוש"
+    },
+    {
+      "name": "מנהל סיעודי",
+      "role_name": "מנהל סיעודי",
+      "role_title_he": "מנהל סיעודי"
+    },
+    {
+      "name": "רכז טיפול",
+      "role_name": "רכז טיפול",
+      "role_title_he": "רכז טיפול"
+    }
+  ],
+  "contact_person_roles": [],
+  "inquiry_statuses": [
+    {
+      "value": "פתוחה",
+      "label": "פתוחה",
+      "type": "open"
+    },
+    {
+      "value": "בטיפול",
+      "label": "בטיפול",
+      "type": "open"
+    },
+    {
+      "value": "ממתינה לתגובת ספק",
+      "label": "ממתינה לתגובת ספק",
+      "type": "open"
+    },
+    {
+      "value": "טופלה",
+      "label": "טופלה",
+      "type": "closed"
+    },
+    {
+      "value": "נסגרה",
+      "label": "נסגרה",
+      "type": "closed"
+    },
+    {
+      "value": "נדחתה",
+      "label": "נדחתה",
+      "type": "closed"
+    }
+  ],
+  "inquiry_contexts": [
+    {
+      "value": "ספק עצמו",
+      "label": "ספק עצמו"
+    },
+    {
+      "value": "מבוטח",
+      "label": "מבוטח"
+    }
+  ]
+}

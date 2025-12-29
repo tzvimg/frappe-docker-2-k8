@@ -1,6 +1,8 @@
 // Auto-generated file - do not edit manually
 // Generated from: supplier.json
 
+import type { SupplierActivityDomain } from './supplier-activity-domain'
+
 /**
  * Supplier DocType
  * Auto-generated from Frappe DocType definition

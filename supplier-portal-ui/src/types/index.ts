@@ -1,14 +1,22 @@
 // Auto-generated index file
 // Re-exports all generated types
 
-export { Supplier, supplierFields } from './supplier'
-export { SupplierInquiry, supplierInquiryFields } from './supplier-inquiry'
-export { ActivityDomainCategory, activityDomainCategoryFields } from './activity-domain-category'
-export { InquiryTopicCategory, inquiryTopicCategoryFields } from './inquiry-topic-category'
-export { ContactPerson, contactPersonFields } from './contact-person'
-export { SupplierRole, supplierRoleFields } from './supplier-role'
-export { SupplierActivityDomain, supplierActivityDomainFields } from './supplier-activity-domain'
-export { ContactPersonRole, contactPersonRoleFields } from './contact-person-role'
+export type { Supplier } from './supplier'
+export { supplierFields } from './supplier'
+export type { SupplierInquiry } from './supplier-inquiry'
+export { supplierInquiryFields } from './supplier-inquiry'
+export type { ActivityDomainCategory } from './activity-domain-category'
+export { activityDomainCategoryFields } from './activity-domain-category'
+export type { InquiryTopicCategory } from './inquiry-topic-category'
+export { inquiryTopicCategoryFields } from './inquiry-topic-category'
+export type { ContactPerson } from './contact-person'
+export { contactPersonFields } from './contact-person'
+export type { SupplierRole } from './supplier-role'
+export { supplierRoleFields } from './supplier-role'
+export type { SupplierActivityDomain } from './supplier-activity-domain'
+export { supplierActivityDomainFields } from './supplier-activity-domain'
+export type { ContactPersonRole } from './contact-person-role'
+export { contactPersonRoleFields } from './contact-person-role'
 
 // Common Frappe types
 export interface FrappeDoc {

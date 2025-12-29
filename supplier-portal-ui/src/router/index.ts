@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
+import { useAuthStore } from '@/stores'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -50,15 +51,32 @@ const router = createRouter({
   routes,
 })
 
-// Navigation guard for authentication
-router.beforeEach((to, _from, next) => {
-  const isAuthenticated = !!localStorage.getItem('user_authenticated')
+// Flag to track if we're currently initializing auth
+let isInitializing = false
 
+// Navigation guard for authentication
+router.beforeEach(async (to, _from, next) => {
+  const authStore = useAuthStore()
+
+  // Initialize auth state on first navigation (only once)
+  if (!authStore.initialized && !isInitializing) {
+    isInitializing = true
+    await authStore.initialize()
+    isInitializing = false
+  }
+
+  const isAuthenticated = authStore.isAuthenticated
+
+  // Redirect to login if route requires auth and user is not authenticated
   if (to.meta.requiresAuth && !isAuthenticated) {
     next({ name: 'Login', query: { redirect: to.fullPath } })
-  } else if (to.name === 'Login' && isAuthenticated) {
+  }
+  // Redirect to dashboard if user is authenticated and trying to access login
+  else if (to.name === 'Login' && isAuthenticated) {
     next({ name: 'Dashboard' })
-  } else {
+  }
+  // Otherwise, proceed normally
+  else {
     next()
   }
 })

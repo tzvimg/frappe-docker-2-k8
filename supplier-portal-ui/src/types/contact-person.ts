@@ -1,6 +1,8 @@
 // Auto-generated file - do not edit manually
 // Generated from: contact_person.json
 
+import type { ContactPersonRole } from './contact-person-role'
+
 /**
  * Contact Person DocType
  * Auto-generated from Frappe DocType definition

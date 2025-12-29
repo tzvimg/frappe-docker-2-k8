@@ -1,37 +1,29 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { login as apiLogin, getCurrentUser } from '@/api/auth'
+import { useAuthStore } from '@/stores'
 
 const router = useRouter()
 const route = useRoute()
+const authStore = useAuthStore()
 
+// Form state (local)
 const email = ref('')
 const password = ref('')
-const loading = ref(false)
-const error = ref('')
+
+// Computed from store
+const loading = computed(() => authStore.loading)
+const error = computed(() => authStore.error)
 
 async function handleLogin() {
-  loading.value = true
-  error.value = ''
+  authStore.clearError()
 
-  try {
-    await apiLogin(email.value, password.value)
+  const success = await authStore.login(email.value, password.value)
 
-    // Verify login was successful by getting current user
-    const currentUser = await getCurrentUser()
-    if (currentUser.user) {
-      localStorage.setItem('user_authenticated', 'true')
-
-      // Redirect to original destination or dashboard
-      const redirect = route.query.redirect as string
-      router.push(redirect || '/')
-    }
-  } catch (e: unknown) {
-    error.value = 'שם משתמש או סיסמה שגויים'
-    console.error('Login error:', e)
-  } finally {
-    loading.value = false
+  if (success) {
+    // Redirect to original destination or dashboard
+    const redirect = route.query.redirect as string
+    router.push(redirect || '/')
   }
 }
 </script>
@@ -58,6 +50,7 @@ async function handleLogin() {
               name="email"
               type="email"
               required
+              autocomplete="email"
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
               placeholder="כתובת דוא״ל"
             />
@@ -70,6 +63,7 @@ async function handleLogin() {
               name="password"
               type="password"
               required
+              autocomplete="current-password"
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
               placeholder="סיסמה"
             />
@@ -88,7 +82,7 @@ async function handleLogin() {
           <button
             type="submit"
             :disabled="loading"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span v-if="loading">מתחבר...</span>
             <span v-else>התחברות</span>

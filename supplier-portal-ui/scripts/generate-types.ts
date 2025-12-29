@@ -28,6 +28,12 @@ const DOCTYPES = [
   'contact_person_role',
 ]
 
+// Mapping of child table DocTypes to their file names
+const CHILD_TABLE_MAP: Record<string, string> = {
+  'Supplier Activity Domain': 'supplier-activity-domain',
+  'Contact Person Role': 'contact-person-role',
+}
+
 // Frappe field type to TypeScript type mapping
 const FIELD_TYPE_MAP: Record<string, string> = {
   'Data': 'string',
@@ -125,12 +131,18 @@ function getTypeScriptType(field: DocTypeField): string {
   return baseType
 }
 
-function generateInterface(doctype: DocTypeDefinition): string {
+interface GeneratedInterface {
+  code: string
+  imports: string[]
+}
+
+function generateInterface(doctype: DocTypeDefinition): GeneratedInterface {
   const interfaceName = toPascalCase(doctype.name)
   const fields = doctype.fields
     .filter(f => !UI_ONLY_FIELDS.includes(f.fieldtype))
     .filter(f => f.fieldname && f.fieldtype)
 
+  const imports: string[] = []
   const lines: string[] = []
   lines.push(`/**`)
   lines.push(` * ${doctype.name} DocType`)
@@ -156,13 +168,23 @@ function generateInterface(doctype: DocTypeDefinition): string {
     const optional = isRequired ? '' : '?'
     const label = field.label || field.fieldname
 
+    // Track imports for child table types
+    if (field.fieldtype === 'Table' && field.options && CHILD_TABLE_MAP[field.options]) {
+      const childType = toPascalCase(field.options)
+      const childFile = CHILD_TABLE_MAP[field.options]
+      imports.push(`import type { ${childType} } from './${childFile}'`)
+    }
+
     lines.push(`  /** ${label} */`)
     lines.push(`  ${field.fieldname}${optional}: ${tsType}`)
   }
 
   lines.push(`}`)
 
-  return lines.join('\n')
+  return {
+    code: lines.join('\n'),
+    imports: [...new Set(imports)], // Remove duplicates
+  }
 }
 
 function generateFieldMetadata(doctype: DocTypeDefinition): string {
@@ -241,27 +263,39 @@ function main() {
       continue
     }
 
-    const interfaceCode = generateInterface(doctype)
+    const { code: interfaceCode, imports } = generateInterface(doctype)
     const metadataCode = generateFieldMetadata(doctype)
 
-    const fileContent = [
+    const fileContentParts = [
       '// Auto-generated file - do not edit manually',
       `// Generated from: ${doctypeName}.json`,
       '',
+    ]
+
+    // Add imports if any
+    if (imports.length > 0) {
+      fileContentParts.push(...imports, '')
+    }
+
+    fileContentParts.push(
       interfaceCode,
       '',
       metadataCode,
-      '',
-    ].join('\n')
+      ''
+    )
+
+    const fileContent = fileContentParts.join('\n')
 
     const outputFile = path.join(OUTPUT_PATH, `${toKebabCase(doctype.name)}.ts`)
     fs.writeFileSync(outputFile, fileContent)
     console.log(`  → Created: ${outputFile}`)
 
-    // Add to index exports
+    // Add to index exports (using export type for interfaces with verbatimModuleSyntax)
     const exportName = toPascalCase(doctype.name)
     const metaExportName = `${toCamelCase(doctype.name)}Fields`
-    indexExports.push(`export { ${exportName}, ${metaExportName} } from './${toKebabCase(doctype.name)}'`)
+    const fileName = toKebabCase(doctype.name)
+    indexExports.push(`export type { ${exportName} } from './${fileName}'`)
+    indexExports.push(`export { ${metaExportName} } from './${fileName}'`)
   }
 
   // Generate index.ts

@@ -4,7 +4,7 @@
  */
 
 import axios, { type AxiosInstance, type AxiosError } from 'axios'
-import type { FrappeResponse, FrappeError, FrappeListResponse } from '@/types'
+import type { FrappeResponse, FrappeError } from '@/types'
 
 // Get API URL from environment
 const API_URL = import.meta.env.VITE_FRAPPE_API_URL || ''
@@ -52,7 +52,7 @@ api.interceptors.response.use(
  */
 export async function call<T>(
   method: string,
-  args: Record<string, unknown> = {}
+  args: object = {}
 ): Promise<T> {
   const response = await api.post<FrappeResponse<T>>(
     `/api/method/${method}`,
@@ -66,7 +66,7 @@ export async function call<T>(
  */
 export async function callSupplierPortal<T>(
   method: string,
-  args: Record<string, unknown> = {}
+  args: object = {}
 ): Promise<T> {
   return call<T>(`siud.api.supplier_portal.${method}`, args)
 }

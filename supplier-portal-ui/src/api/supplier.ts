@@ -3,7 +3,7 @@
  */
 
 import { callSupplierPortal } from './client'
-import type { Supplier, SupplierActivityDomain, ContactPerson } from '@/types'
+import type { SupplierActivityDomain, ContactPerson } from '@/types'
 
 export interface SupplierProfile {
   name: string

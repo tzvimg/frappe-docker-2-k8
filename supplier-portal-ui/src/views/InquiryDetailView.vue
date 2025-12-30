@@ -45,23 +45,35 @@ const isClosed = computed(() => {
   return referenceStore.closedStatuses.includes(inquiry.value.inquiry_status)
 })
 
-// Parse attachments - could be comma-separated URLs or JSON
-function parseAttachments(attachments?: string): string[] {
-  if (!attachments) return []
-  try {
-    // Try JSON parsing first
-    const parsed = JSON.parse(attachments)
-    return Array.isArray(parsed) ? parsed : [parsed]
-  } catch {
-    // Fall back to comma-separated
-    return attachments.split(',').map(s => s.trim()).filter(Boolean)
-  }
+// Attachment type from API
+interface Attachment {
+  name: string
+  file_name: string
+  file_url: string
+  file_size?: number
+  creation?: string
 }
 
-function getFileName(url: string): string {
-  const parts = url.split('/')
-  const fileName = parts[parts.length - 1]
-  return fileName ? decodeURIComponent(fileName) : url
+// Parse attachments - handles array of objects from API
+function parseAttachments(attachments?: Attachment[] | unknown): Attachment[] {
+  if (!attachments) return []
+
+  // Already an array of attachment objects
+  if (Array.isArray(attachments)) {
+    return attachments.filter((a): a is Attachment =>
+      a && typeof a === 'object' && 'file_url' in a
+    )
+  }
+
+  return []
+}
+
+// Format file size for display
+function formatFileSize(bytes?: number): string {
+  if (!bytes) return ''
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 </script>
 
@@ -158,20 +170,23 @@ function getFileName(url: string): string {
             <h2 class="text-lg font-semibold text-gray-900 mb-4">קבצים מצורפים</h2>
             <ul class="space-y-2">
               <li
-                v-for="(attachment, index) in parseAttachments(inquiry.attachments)"
-                :key="index"
+                v-for="attachment in parseAttachments(inquiry.attachments)"
+                :key="attachment.name"
                 class="flex items-center gap-2"
               >
                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                 </svg>
                 <a
-                  :href="attachment"
+                  :href="attachment.file_url"
                   target="_blank"
                   class="text-blue-600 hover:text-blue-700 hover:underline text-sm"
                 >
-                  {{ getFileName(attachment) }}
+                  {{ attachment.file_name }}
                 </a>
+                <span v-if="attachment.file_size" class="text-xs text-gray-400">
+                  ({{ formatFileSize(attachment.file_size) }})
+                </span>
               </li>
             </ul>
           </div>
@@ -195,19 +210,19 @@ function getFileName(url: string): string {
               <h3 class="text-sm font-medium text-green-700 mb-2">קבצים מצורפים למענה</h3>
               <ul class="space-y-1">
                 <li
-                  v-for="(attachment, index) in parseAttachments(inquiry.response_attachments)"
-                  :key="index"
+                  v-for="attachment in parseAttachments(inquiry.response_attachments)"
+                  :key="attachment.name"
                   class="flex items-center gap-2"
                 >
                   <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                   </svg>
                   <a
-                    :href="attachment"
+                    :href="attachment.file_url"
                     target="_blank"
                     class="text-green-700 hover:text-green-800 hover:underline text-sm"
                   >
-                    {{ getFileName(attachment) }}
+                    {{ attachment.file_name }}
                   </a>
                 </li>
               </ul>

@@ -82,8 +82,13 @@
   "contact_person_roles": [],
   "inquiry_statuses": [
     {
-      "value": "פתוחה",
-      "label": "פתוחה",
+      "value": "פנייה חדשה התקבלה",
+      "label": "פנייה חדשה התקבלה",
+      "type": "open"
+    },
+    {
+      "value": "מיון וניתוב",
+      "label": "מיון וניתוב",
       "type": "open"
     },
     {
@@ -92,23 +97,18 @@
       "type": "open"
     },
     {
-      "value": "ממתינה לתגובת ספק",
-      "label": "ממתינה לתגובת ספק",
+      "value": "דורש השלמות / המתנה",
+      "label": "דורש השלמות / המתנה",
       "type": "open"
     },
     {
-      "value": "טופלה",
-      "label": "טופלה",
+      "value": "נסגר – ניתן מענה",
+      "label": "נסגר – ניתן מענה",
       "type": "closed"
     },
     {
-      "value": "נסגרה",
-      "label": "נסגרה",
-      "type": "closed"
-    },
-    {
-      "value": "נדחתה",
-      "label": "נדחתה",
+      "value": "סגור",
+      "label": "סגור",
       "type": "closed"
     }
   ],

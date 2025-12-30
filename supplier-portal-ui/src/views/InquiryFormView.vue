@@ -204,7 +204,7 @@ function goBack() {
             <option
               v-for="topic in referenceStore.inquiryTopics"
               :key="topic.name"
-              :value="topic.category_name"
+              :value="topic.name"
             >
               {{ topic.category_name }}
             </option>

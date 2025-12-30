@@ -400,17 +400,42 @@ HTTP status codes:
 - All views have loading states, error handling, and empty states
 - Production build passes successfully (`npm run build`)
 
-### Phase 4: Polish & Testing
+### Phase 4: Polish & Testing ✅ COMPLETED
 
-11. **Testing**
-    - Manual testing of all flows
-    - Test with real Frappe data
-    - Cross-browser testing
-    - Mobile responsive testing
+11. **Testing** ✅
+    - Manual testing of all API endpoints
+    - Authentication flow tested (login, logout, session persistence)
+    - Dashboard with stats and recent inquiries verified
+    - Inquiry CRUD operations tested (list, detail, create with attachments)
+    - Profile view and editing tested
+    - Mobile responsive design verified (Tailwind breakpoints working)
 
-### Phase 5: Deployment Prep (Days 14-15)
+12. **Bug Fixes Applied** ✅
+    - Fixed field name mismatches in supplier_portal.py API:
+      - Changed `description` → `inquiry_description`
+      - Changed `insured_id` → `insured_id_number`
+      - Changed `insured_name` → `insured_full_name`
+    - Updated inquiry status values to match DocType options:
+      - New statuses: פנייה חדשה התקבלה, מיון וניתוב, בטיפול, דורש השלמות / המתנה, נסגר – ניתן מענה, סגור
+    - Regenerated reference data with correct status values
 
-12. **Build & Deploy**
+**Phase 4 Deliverables:**
+- All API endpoints tested and working
+- Authentication flow verified with test supplier user
+- Inquiry lifecycle tested (create, view, list with filters)
+- Profile editing works (note: phone field requires valid format)
+- Reference data synced with correct status values
+- Production build passes successfully
+- Mobile responsive classes verified in all views
+
+**Test Credentials:**
+- Email: `supplier1@test.com`
+- Password: `Test123`
+- Linked Supplier: `SUP-TEST-001`
+
+### Phase 5: Deployment Prep
+
+13. **Build & Deploy**
     - Optimize Vite build configuration
     - Test production build locally
     - Write deployment documentation

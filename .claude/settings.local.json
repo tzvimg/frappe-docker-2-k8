@@ -28,7 +28,8 @@
       "Bash(npm install:*)",
       "Bash(npx tailwindcss:*)",
       "Bash(npm ls:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(# Test get stats with new values curl -s -b /tmp/cookies.txt -X POST http://localhost:8000/api/method/siud.api.supplier_portal.get_inquiry_stats \\\\ -H \"\"Content-Type: application/json\"\")"
     ],
     "deny": [],
     "ask": []

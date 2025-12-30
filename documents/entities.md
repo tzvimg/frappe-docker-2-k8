@@ -74,6 +74,22 @@
 | **`response_text`** | Text Editor | | Content of the response provided by the handling employee. | **המענה לפנייה - מלל** | Rich Text field. Updated by the staff treating the inquiry. | |
 | **`response_attachments`** | Attach | | Optional files sent in response. | **המענה לפנייה - קבצים** | Optional field. | |
 
+### 7. DocType: Delegated Supplier (ספק מואצל)
+
+ישות זו מייצגת ספק הפועל מטעם ספק אחר (ספק ראשי), עם הרשאות מוגדרות לביצוע פעולות בשמו.
+
+| Field Name (English) | Field Type (Frappe) | Length / Format | Description | Label (Hebrew) | Link / Details | Source |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **`delegating_supplier`** | Link | | The primary supplier who delegates authority. | **ספק מאציל** | Links to `Supplier` DocType. Required. | |
+| **`delegated_supplier`** | Link | | The supplier receiving delegated authority. | **ספק מואצל** | Links to `Supplier` DocType. Required. | |
+| **`delegation_scope`** | Table | | List of permitted actions/domains for the delegated supplier. | **היקף האצלה** | Child table linked to `Activity Domain Category`. | |
+| **`valid_from`** | Date | | Start date of the delegation. | **תקף מתאריך** | | |
+| **`valid_until`** | Date | | End date of the delegation. | **תקף עד תאריך** | Optional. If empty, delegation is indefinite. | |
+| **`delegation_status`** | Select | | Current status of the delegation. | **סטטוס האצלה** | Options: "פעיל" (Active), "מושהה" (Suspended), "בוטל" (Cancelled). | |
+| **`notes`** | Text | | Additional notes or conditions for the delegation. | **הערות** | Optional field. | |
+
+---
+
 ### הערות נוספות על מודולים ותהליכים (יישום Frappe)
 
 הספציפיקציה לעיל מכסה את גבולות ה-POC כפי שהוגדרו,. ה-Frappe Framework מאפשר ליישם את תהליכי הניהול הנלווים כדלקמן:

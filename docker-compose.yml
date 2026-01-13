@@ -1,0 +1,136 @@
+services:
+  mariadb:
+    image: mariadb:11.8
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis-cache:
+    image: redis:6.2-alpine
+    volumes:
+      - redis-cache-data:/data
+
+  redis-queue:
+    image: redis:6.2-alpine
+    volumes:
+      - redis-queue-data:/data
+
+  frappe-backend:
+    build:
+      context: ./frappe_docker/development/frappe-bench/apps
+      dockerfile: ${PWD}/docker/frappe/Dockerfile
+    environment:
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - REDIS_CACHE=redis://redis-cache:6379
+      - REDIS_QUEUE=redis://redis-queue:6379
+      - SITE_NAME=${SITE_NAME}
+    volumes:
+      - frappe-sites:/home/frappe/frappe-bench/sites
+      - frappe-apps:/home/frappe/frappe-bench/apps
+    depends_on:
+      frappe-init:
+        condition: service_completed_successfully
+
+  frappe-websocket:
+    build:
+      context: ./frappe_docker/development/frappe-bench/apps
+      dockerfile: ${PWD}/docker/frappe/Dockerfile
+    command: node /home/frappe/frappe-bench/apps/frappe/socketio.js
+    environment:
+      - REDIS_QUEUE=redis://redis-queue:6379
+    volumes:
+      - frappe-sites:/home/frappe/frappe-bench/sites
+    depends_on:
+      - frappe-backend
+
+  frappe-worker-short:
+    build:
+      context: ./frappe_docker/development/frappe-bench/apps
+      dockerfile: ${PWD}/docker/frappe/Dockerfile
+    command: bench worker --queue short
+    volumes:
+      - frappe-sites:/home/frappe/frappe-bench/sites
+    depends_on:
+      - frappe-backend
+
+  frappe-worker-long:
+    build:
+      context: ./frappe_docker/development/frappe-bench/apps
+      dockerfile: ${PWD}/docker/frappe/Dockerfile
+    command: bench worker --queue long
+    volumes:
+      - frappe-sites:/home/frappe/frappe-bench/sites
+    depends_on:
+      - frappe-backend
+
+  frappe-scheduler:
+    build:
+      context: ./frappe_docker/development/frappe-bench/apps
+      dockerfile: ${PWD}/docker/frappe/Dockerfile
+    command: bench schedule
+    volumes:
+      - frappe-sites:/home/frappe/frappe-bench/sites
+    depends_on:
+      frappe-init:
+        condition: service_completed_successfully
+
+  frappe-init:
+    build:
+      context: ./frappe_docker/development/frappe-bench/apps
+      dockerfile: ${PWD}/docker/frappe/Dockerfile
+    command: /scripts/init-site.sh
+    environment:
+      - DB_HOST=mariadb
+      - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - SITE_NAME=${SITE_NAME}
+      - ADMIN_PASSWORD=admin
+    volumes:
+      - frappe-sites:/home/frappe/frappe-bench/sites
+      - ./scripts:/scripts:ro
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis-cache:
+        condition: service_started
+      redis-queue:
+        condition: service_started
+
+  portal-ui:
+    build:
+      context: ./supplier-portal-ui
+      dockerfile: ${PWD}/docker/portal-ui/Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - frappe-backend
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - frappe-sites:/var/www/sites:ro
+      - frappe-apps:/home/frappe/frappe-bench/apps:ro
+    depends_on:
+      - frappe-backend
+      - frappe-websocket
+      - portal-ui
+
+volumes:
+  mariadb-data:
+  redis-cache-data:
+  redis-queue-data:
+  frappe-sites:
+  frappe-apps:

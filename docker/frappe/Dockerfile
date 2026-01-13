@@ -57,6 +57,7 @@ COPY --chown=frappe:frappe siud apps/siud
 
 # Install siud app dependencies (no frontend assets to build)
 RUN ./env/bin/pip install -e apps/siud \
+    && printf "frappe\nsiud\n" > sites/apps.txt \
     && echo "{}" > sites/common_site_config.json \
     && find apps -mindepth 1 -path "*/.git" | xargs rm -fr
 

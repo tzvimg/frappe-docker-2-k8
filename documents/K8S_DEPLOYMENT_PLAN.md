@@ -49,12 +49,14 @@
 
 ---
 
-### Task 2: Create docker-compose for local testing
-- [ ] `docker-compose.yml` - Full stack (Frappe + portal-ui + MariaDB + Redis)
-- [ ] `.env` - Configuration variables
-- [ ] Init script for site creation
+### Task 2: Create docker-compose for local testing ✅
+- [x] `docker-compose.yml` - Full stack (Frappe + portal-ui + MariaDB + Redis)
+- [x] `.env` - Configuration variables
+- [x] `scripts/init-site.sh` - Init script for site creation
+- [x] `docker/nginx/nginx.conf` - Reverse proxy for routing
 
 **Demo:** `docker-compose up` runs full stack at localhost
+**Completed:** 2026-01-13
 
 ---
 

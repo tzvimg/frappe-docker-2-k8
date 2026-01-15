@@ -1,0 +1,19 @@
+Tables_in__c4f1248614b841ff (tabSupplier%)
+tabSupplier
+tabSupplier Activity Domain
+tabSupplier Inquiry
+tabSupplier Role
+Tables_in__c4f1248614b841ff (tabActivity%)
+tabActivity Domain Category
+tabActivity Log
+Tables_in__c4f1248614b841ff (tabContact%)
+tabContact
+tabContact Email
+tabContact Person
+tabContact Person Role
+tabContact Phone
+Tables_in__c4f1248614b841ff (tabDelegated%)
+tabDelegated Supplier
+tabDelegated Supplier Scope
+Tables_in__c4f1248614b841ff (tabInquiry%)
+tabInquiry Topic Category

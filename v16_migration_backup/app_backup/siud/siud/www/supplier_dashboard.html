@@ -1,0 +1,688 @@
+{% extends "templates/web.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head_include %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block page_content %}
+<div class="supplier-dashboard" dir="rtl">
+	{% if show_error %}
+	<!-- Error Message -->
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="alert alert-danger shadow-sm" role="alert">
+					<div class="d-flex align-items-center mb-3">
+						<svg class="icon-xl text-danger me-3" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<circle cx="12" cy="12" r="10"></circle>
+							<line x1="12" y1="8" x2="12" y2="12"></line>
+							<line x1="12" y1="16" x2="12.01" y2="16"></line>
+						</svg>
+						<h4 class="mb-0">{{ error_title }}</h4>
+					</div>
+					<p class="mb-3">{{ error_message }}</p>
+					<a href="/" class="btn btn-primary">
+						<svg class="icon-sm me-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<line x1="19" y1="12" x2="5" y2="12"></line>
+							<polyline points="12 19 5 12 12 5"></polyline>
+						</svg>
+						חזרה לדף הבית
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% else %}
+	<!-- Dashboard Header -->
+	<div class="dashboard-header">
+		<div class="container-fluid">
+			<div class="row align-items-center py-4">
+				<div class="col-md-8">
+					<h1 class="dashboard-title mb-2">שלום, {{ supplier_name }}</h1>
+					<p class="dashboard-subtitle mb-0">ברוכים הבאים לפורטל הספקים</p>
+				</div>
+				<div class="col-md-4 text-end">
+					<div class="d-flex align-items-center justify-content-end gap-3">						
+						<div class="user-menu-wrapper">
+							<button class="user-avatar-btn" id="userMenuBtn" title="{{ user_name }}">
+								<div class="user-avatar">{{ user_initials }}</div>
+							</button>
+							<div class="user-menu-dropdown" id="userMenuDropdown">
+								<div class="user-menu-header">
+									<div class="user-menu-name">{{ user_name }}</div>
+									<div class="user-menu-email">{{ user_email }}</div>
+								</div>
+								<div class="user-menu-divider"></div>
+								<a href="/supplier-profile" class="user-menu-item">
+									<svg class="icon-sm" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+										<circle cx="12" cy="7" r="4"></circle>
+									</svg>
+									הפרופיל שלי
+								</a>
+								<a href="/api/method/logout" class="user-menu-item">
+									<svg class="icon-sm" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+										<polyline points="16 17 21 12 16 7"></polyline>
+										<line x1="21" y1="12" x2="9" y2="12"></line>
+									</svg>
+									התנתק
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Dashboard Content -->
+	<div class="container-fluid py-4">
+		<!-- Statistics Cards -->
+		<div class="row g-4 mb-4">
+			<div class="col-md-4">
+				<div class="stat-card stat-card-primary">
+					<div class="stat-icon">
+						<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+							<polyline points="14 2 14 8 20 8"></polyline>
+							<line x1="16" y1="13" x2="8" y2="13"></line>
+							<line x1="16" y1="17" x2="8" y2="17"></line>
+							<polyline points="10 9 9 9 8 9"></polyline>
+						</svg>
+					</div>
+					<div class="stat-content">
+						<h3 class="stat-label">סה"כ פניות</h3>
+						<div class="stat-value">{{ total_inquiries }}</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="stat-card stat-card-warning">
+					<div class="stat-icon">
+						<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<circle cx="12" cy="12" r="10"></circle>
+							<polyline points="12 6 12 12 16 14"></polyline>
+						</svg>
+					</div>
+					<div class="stat-content">
+						<h3 class="stat-label">פניות פתוחות</h3>
+						<div class="stat-value">{{ open_inquiries }}</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="stat-card stat-card-success">
+					<div class="stat-icon">
+						<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+							<polyline points="22 4 12 14.01 9 11.01"></polyline>
+						</svg>
+					</div>
+					<div class="stat-content">
+						<h3 class="stat-label">פניות סגורות</h3>
+						<div class="stat-value">{{ closed_inquiries }}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Quick Actions -->
+		<div class="row mb-4">
+			<div class="col-12">
+				<div class="actions-card">
+					<h4 class="actions-title mb-4">
+						<svg class="icon-md me-2" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<circle cx="12" cy="12" r="3"></circle>
+							<path d="M12 1v6m0 6v6m8.66-7-5.2 3m-5.2 3-5.2-3M3.34 8l5.2 3m5.2-3 5.2-3"></path>
+						</svg>
+						פעולות מהירות
+					</h4>
+					<div class="action-buttons">
+						<a href="/supplier-inquiry-form/new" class="btn btn-action btn-action-primary">
+							<svg class="icon-md" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<line x1="12" y1="5" x2="12" y2="19"></line>
+								<line x1="5" y1="12" x2="19" y2="12"></line>
+							</svg>
+							פנייה חדשה
+						</a>
+						<a href="/supplier-inquiry-form/list" class="btn btn-action btn-action-outline">
+							<svg class="icon-md" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<line x1="8" y1="6" x2="21" y2="6"></line>
+								<line x1="8" y1="12" x2="21" y2="12"></line>
+								<line x1="8" y1="18" x2="21" y2="18"></line>
+								<line x1="3" y1="6" x2="3.01" y2="6"></line>
+								<line x1="3" y1="12" x2="3.01" y2="12"></line>
+								<line x1="3" y1="18" x2="3.01" y2="18"></line>
+							</svg>
+							כל הפניות שלי
+						</a>
+						<a href="/supplier-profile" class="btn btn-action btn-action-outline">
+							<svg class="icon-md" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+								<circle cx="12" cy="7" r="4"></circle>
+							</svg>
+							הפרופיל שלי
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Recent Inquiries -->
+		<div class="row">
+			<div class="col-12">
+				<div class="inquiries-card">
+					<h4 class="inquiries-title mb-4">
+						<svg class="icon-md me-2" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+						</svg>
+						פניות אחרונות
+					</h4>
+					{% if recent_inquiries %}
+					<div class="table-responsive">
+						<table class="inquiries-table">
+							<thead>
+								<tr>
+									<th>מספר פנייה</th>
+									<th>קטגוריה</th>
+									<th>סטטוס</th>
+									<th>תאריך יצירה</th>
+									<th class="text-center">פעולות</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for inquiry in recent_inquiries %}
+								<tr>
+									<td class="fw-bold">{{ inquiry.name }}</td>
+									<td>{{ inquiry.topic_category }}</td>
+									<td>
+										<span class="badge-inquiry
+											{% if inquiry.inquiry_status in ['פתוחה', 'בטיפול', 'ממתינה לתגובת ספק'] %}badge-inquiry-warning
+											{% elif inquiry.inquiry_status == 'טופלה' %}badge-inquiry-success
+											{% else %}badge-inquiry-secondary
+											{% endif %}">
+											{{ inquiry.inquiry_status }}
+										</span>
+									</td>
+									<td class="text-muted">{{ frappe.utils.format_datetime(inquiry.creation, "dd/MM/yyyy HH:mm") }}</td>
+									<td class="text-center">
+										<a href="/supplier-inquiry-form/{{ inquiry.name }}" class="btn-view">
+											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+												<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+												<circle cx="12" cy="12" r="3"></circle>
+											</svg>
+											צפייה
+										</a>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+					{% else %}
+					<div class="empty-state">
+						<svg class="empty-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+							<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+							<polyline points="14 2 14 8 20 8"></polyline>
+						</svg>
+						<h5 class="empty-title">אין פניות עדיין</h5>
+						<p class="empty-text">התחל בפנייה חדשה ותוכל לעקוב אחריה כאן</p>
+						<a href="/supplier-inquiry-form/new" class="btn btn-primary mt-3">צור פנייה חדשה</a>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+</div>
+
+<style>
+
+	/* hide srrounding assests - start */
+	.navbar {
+		display: none;
+	}
+	.sidebar-column {
+		display: none;
+		width: 0;
+	}
+	.page-content-wrapper{
+		margin: 0 !important; 
+		padding: 0;
+	}
+	.main-section, .container {
+		max-width: 100% !important;
+		padding: 0 !important;
+		margin: 0 !important;
+	}
+
+	.main-column.col-sm-10{
+		max-width: 100% !important;
+		flex: 0 0 100%;
+	}
+	/* hide srrounding assests - end */
+	
+
+	/* Hide sidebar and footer */
+	.web-sidebar,
+	.sidebar,
+	.page-sidebar,
+	.web-footer,
+	footer {
+		display: none !important;
+	}
+
+	/* Make main content full width */
+	.page-content-wrapper,
+	.page-container {
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+		width: 100% !important;
+	}
+
+	* {
+		font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	}
+
+	.supplier-dashboard {
+		background: #f5f7fa;
+		min-height: 100vh;
+	}
+
+	/* Dashboard Header */
+	.dashboard-header {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		color: white;
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+	}
+
+	.dashboard-title {
+		font-size: 2rem;
+		font-weight: 700;
+		margin: 0;
+	}
+
+	.dashboard-subtitle {
+		font-size: 1.1rem;
+		opacity: 0.9;
+	}
+
+	.badge-status {
+		background: rgba(255, 255, 255, 0.2);
+		color: white;
+		padding: 0.5rem 1rem;
+		border-radius: 20px;
+		font-size: 0.875rem;
+		font-weight: 500;
+	}
+
+	/* User Menu Styles */
+	.user-menu-wrapper {
+		position: relative;
+	}
+
+	.user-avatar-btn {
+		background: transparent;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		transition: transform 0.2s;
+	}
+
+	.user-avatar-btn:hover {
+		transform: scale(1.05);
+	}
+
+	.user-avatar-btn.active {
+		transform: scale(1.05);
+	}
+
+	.user-avatar {
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+		color: #667eea;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: 700;
+		font-size: 0.938rem;
+		border: 2px solid rgba(255, 255, 255, 0.4);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		letter-spacing: 0.5px;
+	}
+
+	.user-menu-dropdown {
+		position: absolute;
+		top: calc(100% + 0.75rem);
+		left: 0;
+		background: white;
+		border-radius: 12px;
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+		min-width: 240px;
+		opacity: 0;
+		visibility: hidden;
+		transform: translateY(-10px);
+		transition: all 0.2s;
+		z-index: 1000;
+	}
+
+	.user-menu-dropdown.show {
+		opacity: 1;
+		visibility: visible;
+		transform: translateY(0);
+	}
+
+	.user-menu-header {
+		padding: 1rem;
+		background: #f9fafb;
+		border-radius: 12px 12px 0 0;
+	}
+
+	.user-menu-name {
+		font-weight: 600;
+		color: #111827;
+		font-size: 0.938rem;
+		margin-bottom: 0.25rem;
+	}
+
+	.user-menu-email {
+		font-size: 0.813rem;
+		color: #6b7280;
+	}
+
+	.user-menu-divider {
+		height: 1px;
+		background: #e5e7eb;
+		margin: 0;
+	}
+
+	.user-menu-item {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.75rem 1rem;
+		color: #374151;
+		text-decoration: none;
+		font-size: 0.875rem;
+		font-weight: 500;
+		transition: all 0.15s;
+	}
+
+	.user-menu-item:hover {
+		background: #f3f4f6;
+		color: #667eea;
+	}
+
+	.user-menu-item:last-child {
+		border-radius: 0 0 12px 12px;
+	}
+
+	.user-menu-item svg {
+		flex-shrink: 0;
+	}
+
+	.stat-card {
+		background: white;
+		border-radius: 16px;
+		padding: 1.5rem;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+		transition: transform 0.2s, box-shadow 0.2s;
+		display: flex;
+		align-items: center;
+		gap: 1.5rem;
+	}
+
+	.stat-card:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+	}
+
+	.stat-icon {
+		width: 64px;
+		height: 64px;
+		border-radius: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+
+	.stat-card-primary .stat-icon {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		color: white;
+	}
+
+	.stat-card-warning .stat-icon {
+		background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+		color: white;
+	}
+
+	.stat-card-success .stat-icon {
+		background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+		color: white;
+	}
+
+	.stat-content {
+		flex: 1;
+	}
+
+	.stat-label {
+		font-size: 0.875rem;
+		font-weight: 500;
+		color: #6b7280;
+		margin: 0 0 0.5rem 0;
+	}
+
+	.stat-value {
+		font-size: 2.5rem;
+		font-weight: 700;
+		color: #111827;
+		line-height: 1;
+	}
+
+	.actions-card,
+	.inquiries-card {
+		background: white;
+		border-radius: 16px;
+		padding: 2rem;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	}
+
+	.actions-title,
+	.inquiries-title {
+		font-size: 1.25rem;
+		font-weight: 600;
+		color: #111827;
+		display: flex;
+		align-items: center;
+		margin: 0;
+	}
+
+	.action-buttons {
+		display: flex;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.btn-action {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.875rem 1.5rem;
+		border-radius: 12px;
+		font-weight: 600;
+		font-size: 1rem;
+		transition: all 0.2s;
+		text-decoration: none;
+		border: 2px solid transparent;
+	}
+
+	.btn-action-primary {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		color: white;
+	}
+
+	.btn-action-primary:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+		color: white;
+	}
+
+	.btn-action-outline {
+		background: white;
+		color: #667eea;
+		border-color: #667eea;
+	}
+
+	.btn-action-outline:hover {
+		background: #667eea;
+		color: white;
+		transform: translateY(-2px);
+		box-shadow: 0 8px 16px rgba(102, 126, 234, 0.2);
+	}
+
+	.inquiries-table {
+		width: 100%;
+		border-collapse: separate;
+		border-spacing: 0;
+	}
+
+	.inquiries-table thead th {
+		background: #f9fafb;
+		padding: 1rem;
+		font-weight: 600;
+		font-size: 0.875rem;
+		color: #6b7280;
+		border-bottom: 2px solid #e5e7eb;
+		text-align: right;
+	}
+
+	.inquiries-table tbody td {
+		padding: 1rem;
+		border-bottom: 1px solid #f3f4f6;
+		text-align: right;
+	}
+
+	.inquiries-table tbody tr:last-child td {
+		border-bottom: none;
+	}
+
+	.inquiries-table tbody tr:hover {
+		background: #f9fafb;
+	}
+
+	.badge-inquiry {
+		display: inline-block;
+		padding: 0.375rem 0.75rem;
+		border-radius: 12px;
+		font-size: 0.813rem;
+		font-weight: 600;
+	}
+
+	.badge-inquiry-warning {
+		background: #fef3c7;
+		color: #d97706;
+	}
+
+	.badge-inquiry-success {
+		background: #d1fae5;
+		color: #059669;
+	}
+
+	.badge-inquiry-secondary {
+		background: #e5e7eb;
+		color: #6b7280;
+	}
+
+	.btn-view {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.375rem;
+		padding: 0.5rem 1rem;
+		background: white;
+		color: #667eea;
+		border: 1.5px solid #667eea;
+		border-radius: 8px;
+		font-weight: 600;
+		font-size: 0.875rem;
+		text-decoration: none;
+		transition: all 0.2s;
+	}
+
+	.btn-view:hover {
+		background: #667eea;
+		color: white;
+		transform: scale(1.05);
+	}
+
+	.empty-state {
+		text-align: center;
+		padding: 4rem 2rem;
+	}
+
+	.empty-icon {
+		color: #d1d5db;
+		margin-bottom: 1.5rem;
+	}
+
+	.empty-title {
+		font-size: 1.25rem;
+		font-weight: 600;
+		color: #374151;
+		margin-bottom: 0.5rem;
+	}
+
+	.empty-text {
+		color: #6b7280;
+		margin-bottom: 0;
+	}
+
+	.icon-sm { width: 16px; height: 16px; }
+	.icon-md { width: 20px; height: 20px; }
+	.icon-xl { width: 48px; height: 48px; }
+
+	@media (max-width: 768px) {
+		.dashboard-title { font-size: 1.5rem; }
+		.stat-value { font-size: 2rem; }
+		.action-buttons { flex-direction: column; }
+		.btn-action { width: 100%; justify-content: center; }
+	}
+</style>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const userMenuBtn = document.getElementById('userMenuBtn');
+		const userMenuDropdown = document.getElementById('userMenuDropdown');
+
+		if (userMenuBtn && userMenuDropdown) {
+			// Toggle dropdown on button click
+			userMenuBtn.addEventListener('click', function(e) {
+				e.stopPropagation();
+				userMenuBtn.classList.toggle('active');
+				userMenuDropdown.classList.toggle('show');
+			});
+
+			// Close dropdown when clicking outside
+			document.addEventListener('click', function(e) {
+				if (!userMenuBtn.contains(e.target) && !userMenuDropdown.contains(e.target)) {
+					userMenuBtn.classList.remove('active');
+					userMenuDropdown.classList.remove('show');
+				}
+			});
+
+			// Prevent dropdown from closing when clicking inside it
+			userMenuDropdown.addEventListener('click', function(e) {
+				e.stopPropagation();
+			});
+		}
+	});
+</script>
+{% endblock %}

@@ -1,0 +1,103 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:supplier_id",
+ "creation": "2025-12-10 14:36:47.564571",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "supplier_id",
+  "supplier_name",
+  "activity_domains_section",
+  "activity_domains",
+  "contact_section",
+  "address",
+  "column_break_1",
+  "phone",
+  "email"
+ ],
+ "fields": [
+  {
+   "fieldname": "supplier_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u05de\u05d6\u05d4\u05d4 \u05e1\u05e4\u05e7",
+   "read_only_depends_on": "eval:!doc.__islocal",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "supplier_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "\u05e9\u05dd \u05e1\u05e4\u05e7",
+   "reqd": 1
+  },
+  {
+   "fieldname": "activity_domains_section",
+   "fieldtype": "Section Break",
+   "label": "\u05ea\u05d7\u05d5\u05de\u05d9 \u05e4\u05e2\u05d9\u05dc\u05d5\u05ea"
+  },
+  {
+   "fieldname": "activity_domains",
+   "fieldtype": "Table",
+   "label": "\u05ea\u05d7\u05d5\u05de\u05d9 \u05e4\u05e2\u05d9\u05dc\u05d5\u05ea",
+   "options": "Supplier Activity Domain"
+  },
+  {
+   "fieldname": "contact_section",
+   "fieldtype": "Section Break",
+   "label": "\u05e4\u05e8\u05d8\u05d9 \u05e7\u05e9\u05e8"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Text",
+   "label": "\u05db\u05ea\u05d5\u05d1\u05ea"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Phone",
+   "label": "\u05d8\u05dc\u05e4\u05d5\u05df"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "\u05db\u05ea\u05d5\u05d1\u05ea \u05d3\u05d5\u05d0\"\u05dc",
+   "options": "Email"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-12-22 16:00:23.666676",
+ "modified_by": "Administrator",
+ "module": "Siud",
+ "name": "Supplier",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "route": "supplier",
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

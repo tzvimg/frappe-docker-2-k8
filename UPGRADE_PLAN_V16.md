@@ -34,34 +34,63 @@
 
 ---
 
-## Phase 1: Preparation & Backup
+## Phase 1: Preparation & Backup ✅ COMPLETED
+
+**Completed**: 2026-01-15
 
 ### 1.1 Document Current State
-- [ ] Export all DocType JSON definitions
-- [ ] Document current database schema
-- [ ] List all custom fields and configurations
-- [ ] Screenshot current workspace layout
-- [ ] Document user roles and permissions
+- [x] Export all DocType JSON definitions (10 DocTypes exported)
+- [x] Document current database schema (see `v16_migration_backup/schema/`)
+- [x] List all custom fields and configurations (none found - all in DocType JSONs)
+- [x] Document workspace layout (exported to backup)
+- [x] Document user roles and permissions (Supplier Portal User role documented)
 
 ### 1.2 Backup Everything
-- [ ] Full database backup (MariaDB dump)
-- [ ] Full file system backup of siud app
-- [ ] Backup site configuration files
-- [ ] Export fixtures if any
+- [x] Full database backup (MariaDB dump with files)
+- [x] Full file system backup of siud app (115 files, 620KB)
+- [x] Backup site configuration files
+- [x] Export fixtures (no fixtures configured; tables empty in dev environment)
 
-### 1.3 Backup Commands
+### 1.3 Backup Location
+All backups stored in: `v16_migration_backup/`
+
+```
+v16_migration_backup/
+├── doctypes/           # All 10 DocType JSON definitions
+│   └── doctype/        # Full doctype directory with .py, .js, .json files
+├── schema/             # Database schema documentation
+│   ├── SCHEMA_SUMMARY.md
+│   ├── table_schemas.txt
+│   └── siud_tables.txt
+├── config/             # Configuration files
+│   ├── CONFIGURATION_SUMMARY.md
+│   ├── ROLES_AND_PERMISSIONS.md
+│   ├── hooks.py
+│   ├── site_config.json
+│   ├── common_site_config.json
+│   ├── workspace/
+│   └── www/            # Portal pages
+├── db_backup/          # Database backup (2026-01-15)
+│   ├── *-database.sql.gz
+│   ├── *-files.tar
+│   ├── *-private-files.tar
+│   └── *-site_config_backup.json
+├── app_backup/         # Complete siud app copy
+│   └── siud/
+└── fixtures/           # Reference data (empty in dev)
+    └── README.md
+```
+
+### 1.4 Backup Commands Used
 ```bash
-# Inside container
-cd /workspace/development/frappe-bench
+# Inside container (site: siud.local)
+cd /home/frappe/frappe-bench
 
-# Database backup
-bench --site development.localhost backup --with-files
+# Database backup with files
+bench --site siud.local backup --with-files
 
-# Copy siud app
-cp -r apps/siud /workspace/backup/siud_v15_backup
-
-# Export data (optional - for data migration)
-bench --site development.localhost export-fixtures
+# App copied via docker cp
+docker cp frappe-frappe-backend-1:/home/frappe/frappe-bench/apps/siud ./backup/
 ```
 
 ---
@@ -414,7 +443,7 @@ After successful migration, consider adopting:
 
 | Phase | Status | Notes |
 |-------|--------|-------|
-| Phase 1: Preparation | ⬜ Pending | |
+| Phase 1: Preparation | ✅ Complete | 2026-01-15 - All backups in v16_migration_backup/ |
 | Phase 2: v16 Setup | ⬜ Pending | |
 | Phase 3: App Structure | ⬜ Pending | |
 | Phase 4: DocTypes | ⬜ Pending | |

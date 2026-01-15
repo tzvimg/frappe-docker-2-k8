@@ -1,0 +1,162 @@
+Field	Type	Null	Key	Default	Extra
+name	varchar(140)	NO	PRI	NULL	
+creation	datetime(6)	YES		NULL	
+modified	datetime(6)	YES	MUL	NULL	
+modified_by	varchar(140)	YES		NULL	
+owner	varchar(140)	YES		NULL	
+docstatus	int(1)	NO		0	
+idx	int(8)	NO		0	
+supplier_id	varchar(140)	YES	UNI	NULL	
+supplier_name	varchar(140)	YES		NULL	
+address	text	YES		NULL	
+phone	varchar(140)	YES		NULL	
+email	varchar(140)	YES		NULL	
+_user_tags	text	YES		NULL	
+_comments	text	YES		NULL	
+_assign	text	YES		NULL	
+_liked_by	text	YES		NULL	
+Field	Type	Null	Key	Default	Extra
+name	varchar(140)	NO	PRI	NULL	
+creation	datetime(6)	YES		NULL	
+modified	datetime(6)	YES		NULL	
+modified_by	varchar(140)	YES		NULL	
+owner	varchar(140)	YES		NULL	
+docstatus	int(1)	NO		0	
+idx	int(8)	NO		0	
+activity_domain_category	varchar(140)	YES		NULL	
+parent	varchar(140)	YES	MUL	NULL	
+parentfield	varchar(140)	YES		NULL	
+parenttype	varchar(140)	YES		NULL	
+Field	Type	Null	Key	Default	Extra
+name	varchar(140)	NO	PRI	NULL	
+creation	datetime(6)	YES		NULL	
+modified	datetime(6)	YES	MUL	NULL	
+modified_by	varchar(140)	YES		NULL	
+owner	varchar(140)	YES		NULL	
+docstatus	int(1)	NO		0	
+idx	int(8)	NO		0	
+supplier_link	varchar(140)	YES		NULL	
+topic_category	varchar(140)	YES		NULL	
+inquiry_description	longtext	YES		NULL	
+inquiry_context	varchar(140)	YES		NULL	
+insured_id_number	varchar(64)	YES		NULL	
+insured_full_name	varchar(140)	YES		NULL	
+attachments	text	YES		NULL	
+inquiry_status	varchar(140)	YES		פנייה חדשה התקבלה	
+assigned_role	varchar(140)	YES		NULL	
+assigned_employee_id	varchar(140)	YES		NULL	
+response_text	longtext	YES		NULL	
+response_attachments	text	YES		NULL	
+amended_from	varchar(140)	YES	MUL	NULL	
+_user_tags	text	YES		NULL	
+_comments	text	YES		NULL	
+_assign	text	YES		NULL	
+_liked_by	text	YES		NULL	
+Field	Type	Null	Key	Default	Extra
+name	varchar(140)	NO	PRI	NULL	
+creation	datetime(6)	YES		NULL	
+modified	datetime(6)	YES	MUL	NULL	
+modified_by	varchar(140)	YES		NULL	
+owner	varchar(140)	YES		NULL	
+docstatus	int(1)	NO		0	
+idx	int(8)	NO		0	
+role_name	varchar(140)	YES	UNI	NULL	
+role_title_he	varchar(140)	YES		NULL	
+_user_tags	text	YES		NULL	
+_comments	text	YES		NULL	
+_assign	text	YES		NULL	
+_liked_by	text	YES		NULL	
+Field	Type	Null	Key	Default	Extra
+name	varchar(140)	NO	PRI	NULL	
+creation	datetime(6)	YES		NULL	
+modified	datetime(6)	YES	MUL	NULL	
+modified_by	varchar(140)	YES		NULL	
+owner	varchar(140)	YES		NULL	
+docstatus	int(1)	NO		0	
+idx	int(8)	NO		0	
+category_code	varchar(140)	YES	UNI	NULL	
+category_name	varchar(140)	YES		NULL	
+_user_tags	text	YES		NULL	
+_comments	text	YES		NULL	
+_assign	text	YES		NULL	
+_liked_by	text	YES		NULL	
+Field	Type	Null	Key	Default	Extra
+name	varchar(140)	NO	PRI	NULL	
+creation	datetime(6)	YES		NULL	
+modified	datetime(6)	YES	MUL	NULL	
+modified_by	varchar(140)	YES		NULL	
+owner	varchar(140)	YES		NULL	
+docstatus	int(1)	NO		0	
+idx	int(8)	NO		0	
+contact_name	varchar(140)	YES		NULL	
+supplier_link	varchar(140)	YES		NULL	
+email	varchar(140)	YES		NULL	
+mobile_phone	varchar(140)	YES		NULL	
+branch	varchar(140)	YES		NULL	
+primary_role_type	varchar(140)	YES		NULL	
+_user_tags	text	YES		NULL	
+_comments	text	YES		NULL	
+_assign	text	YES		NULL	
+_liked_by	text	YES		NULL	
+Field	Type	Null	Key	Default	Extra
+name	varchar(140)	NO	PRI	NULL	
+creation	datetime(6)	YES		NULL	
+modified	datetime(6)	YES		NULL	
+modified_by	varchar(140)	YES		NULL	
+owner	varchar(140)	YES		NULL	
+docstatus	int(1)	NO		0	
+idx	int(8)	NO		0	
+role	varchar(140)	YES		NULL	
+parent	varchar(140)	YES	MUL	NULL	
+parentfield	varchar(140)	YES		NULL	
+parenttype	varchar(140)	YES		NULL	
+Field	Type	Null	Key	Default	Extra
+name	varchar(140)	NO	PRI	NULL	
+creation	datetime(6)	YES		NULL	
+modified	datetime(6)	YES	MUL	NULL	
+modified_by	varchar(140)	YES		NULL	
+owner	varchar(140)	YES		NULL	
+docstatus	int(1)	NO		0	
+idx	int(8)	NO		0	
+delegating_supplier	varchar(140)	YES		NULL	
+delegated_supplier	varchar(140)	YES		NULL	
+delegation_status	varchar(140)	YES		פעיל	
+valid_from	date	YES		NULL	
+valid_until	date	YES		NULL	
+notes	text	YES		NULL	
+_user_tags	text	YES		NULL	
+_comments	text	YES		NULL	
+_assign	text	YES		NULL	
+_liked_by	text	YES		NULL	
+Field	Type	Null	Key	Default	Extra
+name	varchar(140)	NO	PRI	NULL	
+creation	datetime(6)	YES		NULL	
+modified	datetime(6)	YES		NULL	
+modified_by	varchar(140)	YES		NULL	
+owner	varchar(140)	YES		NULL	
+docstatus	int(1)	NO		0	
+idx	int(8)	NO		0	
+activity_domain_category	varchar(140)	YES		NULL	
+parent	varchar(140)	YES	MUL	NULL	
+parentfield	varchar(140)	YES		NULL	
+parenttype	varchar(140)	YES		NULL	
+Field	Type	Null	Key	Default	Extra
+name	varchar(140)	NO	PRI	NULL	
+creation	datetime(6)	YES		NULL	
+modified	datetime(6)	YES	MUL	NULL	
+modified_by	varchar(140)	YES		NULL	
+owner	varchar(140)	YES		NULL	
+docstatus	int(1)	NO		0	
+idx	int(8)	NO		0	
+category_code	varchar(140)	YES	UNI	NULL	
+category_name	varchar(140)	YES		NULL	
+parent_category	varchar(140)	YES		NULL	
+lft	int(11)	NO		0	
+rgt	int(11)	NO		0	
+is_group	int(1)	NO		0	
+old_parent	varchar(140)	YES		NULL	
+parent_inquiry_topic_category	varchar(140)	YES		NULL	
+_user_tags	text	YES		NULL	
+_comments	text	YES		NULL	
+_assign	text	YES		NULL	
+_liked_by	text	YES		NULL	

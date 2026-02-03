@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: frappe-sites
+  namespace: frappe
+spec:
+  storageClassName: ""  # Set to your Tanzu storage class, e.g., "tanzu-storage-policy"
+  accessModes:
+    - ReadWriteMany  # Requires vSAN File Services or NFS
+  resources:
+    requests:
+      storage: 10Gi

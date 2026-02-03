@@ -1,8 +1,8 @@
 # Frappe + siud app production image
 # Build context: frappe_docker/development/frappe-bench/apps directory
-# Expects siud app at: ./siud
-ARG PYTHON_VERSION=3.11.6
-ARG NODE_VERSION=20.19.2
+# Expects frappe at: ./frappe, siud at: ./siud
+ARG PYTHON_VERSION=3.14.2
+ARG NODE_VERSION=24.12.0
 
 FROM python:${PYTHON_VERSION}-slim-bookworm AS base
 
@@ -41,21 +41,32 @@ USER frappe
 
 FROM build AS builder
 
-ARG FRAPPE_BRANCH=version-15
-ARG FRAPPE_PATH=https://github.com/frappe/frappe
-
 WORKDIR /home/frappe
 
-# Initialize bench with frappe
-RUN bench init --frappe-branch=${FRAPPE_BRANCH} --frappe-path=${FRAPPE_PATH} \
-    --no-procfile --no-backups --skip-redis-config-generation --verbose frappe-bench
+# Create bench structure manually using frappe from build context
+RUN mkdir -p frappe-bench/apps frappe-bench/sites frappe-bench/logs frappe-bench/config
 
 WORKDIR /home/frappe/frappe-bench
+
+# Copy frappe app from build context (instead of cloning from GitHub)
+COPY --chown=frappe:frappe frappe apps/frappe
+
+# Create Python virtual environment and install frappe
+RUN python -m venv env \
+    && ./env/bin/pip install --upgrade pip wheel setuptools \
+    && ./env/bin/pip install -e apps/frappe
+
+# Create bench config files required for bench CLI to work
+RUN echo "" > patches.txt \
+    && echo 'web: bench serve --port 8000\nsocketio: node apps/frappe/socketio.js\nwatch: bench watch\nschedule: bench schedule\nworker: bench worker' > Procfile
+
+# Copy pre-built assets from build context (skip rebuilding)
+# Assets were already built in the devcontainer
 
 # Copy siud app from build context
 COPY --chown=frappe:frappe siud apps/siud
 
-# Install siud app dependencies (no frontend assets to build)
+# Install siud app and finalize setup
 RUN ./env/bin/pip install -e apps/siud \
     && printf "frappe\nsiud\n" > sites/apps.txt \
     && echo "{}" > sites/common_site_config.json \

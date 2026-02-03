@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frappe-backend
+  namespace: frappe
+spec:
+  selector:
+    app: frappe-backend
+  ports:
+    - port: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frappe-backend
+  namespace: frappe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frappe-backend
+  template:
+    metadata:
+      labels:
+        app: frappe-backend
+    spec:
+      containers:
+        - name: frappe
+          image: frappe-siud:latest
+          envFrom:
+            - configMapRef:
+                name: frappe-config
+          volumeMounts:
+            - name: sites
+              mountPath: /home/frappe/frappe-bench/sites
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /api/method/ping
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      volumes:
+        - name: sites
+          persistentVolumeClaim:
+            claimName: frappe-sites

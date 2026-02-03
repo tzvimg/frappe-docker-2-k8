@@ -1,0 +1,170 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config-single
+  namespace: frappe
+data:
+  default.conf: |
+    upstream backend {
+      server 127.0.0.1:8000;
+    }
+    upstream websocket {
+      server 127.0.0.1:9000;
+    }
+    server {
+      listen 8080;
+      root /var/www/sites;
+      
+      location /assets {
+        try_files $uri =404;
+      }
+      location /socket.io {
+        proxy_pass http://websocket;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+      }
+      location / {
+        proxy_pass http://backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+      }
+    }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: frappe-sites
+  namespace: frappe
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frappe
+  namespace: frappe
+spec:
+  selector:
+    app: frappe
+  ports:
+    - name: http
+      port: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frappe
+  namespace: frappe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frappe
+  template:
+    metadata:
+      labels:
+        app: frappe
+    spec:
+      initContainers:
+        - name: wait-db
+          image: busybox
+          command: ['sh', '-c', 'until nc -z mariadb 3306; do sleep 2; done']
+        - name: init-site
+          image: frappe-siud:latest
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              cd /home/frappe/frappe-bench
+              if [ ! -f sites/$SITE_NAME/site_config.json ]; then
+                bench new-site $SITE_NAME --db-host=$DB_HOST --db-root-password=$DB_ROOT_PASSWORD --admin-password=$ADMIN_PASSWORD --no-mariadb-socket
+                bench --site $SITE_NAME install-app siud
+              fi
+              bench --site $SITE_NAME migrate
+          envFrom:
+            - configMapRef:
+                name: frappe-config
+          env:
+            - name: DB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: frappe-secrets
+                  key: DB_ROOT_PASSWORD
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: frappe-secrets
+                  key: ADMIN_PASSWORD
+          volumeMounts:
+            - name: sites
+              mountPath: /home/frappe/frappe-bench/sites
+      containers:
+        - name: backend
+          image: frappe-siud:latest
+          envFrom:
+            - configMapRef:
+                name: frappe-config
+          volumeMounts:
+            - name: sites
+              mountPath: /home/frappe/frappe-bench/sites
+          ports:
+            - containerPort: 8000
+        - name: websocket
+          image: frappe-siud:latest
+          command: ["node", "/home/frappe/frappe-bench/apps/frappe/socketio.js"]
+          envFrom:
+            - configMapRef:
+                name: frappe-config
+          volumeMounts:
+            - name: sites
+              mountPath: /home/frappe/frappe-bench/sites
+          ports:
+            - containerPort: 9000
+        - name: scheduler
+          image: frappe-siud:latest
+          command: ["bench", "schedule"]
+          envFrom:
+            - configMapRef:
+                name: frappe-config
+          volumeMounts:
+            - name: sites
+              mountPath: /home/frappe/frappe-bench/sites
+        - name: worker-short
+          image: frappe-siud:latest
+          command: ["bench", "worker", "--queue", "short"]
+          envFrom:
+            - configMapRef:
+                name: frappe-config
+          volumeMounts:
+            - name: sites
+              mountPath: /home/frappe/frappe-bench/sites
+        - name: worker-long
+          image: frappe-siud:latest
+          command: ["bench", "worker", "--queue", "long"]
+          envFrom:
+            - configMapRef:
+                name: frappe-config
+          volumeMounts:
+            - name: sites
+              mountPath: /home/frappe/frappe-bench/sites
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: sites
+              mountPath: /var/www/sites
+              readOnly: true
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: sites
+          persistentVolumeClaim:
+            claimName: frappe-sites
+        - name: nginx-config
+          configMap:
+            name: nginx-config-single

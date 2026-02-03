@@ -39,12 +39,17 @@ if [ ! -d "sites/$SITE_NAME" ]; then
     fi
 
     echo "Installing siud app..."
-    bench --site $SITE_NAME install-app siud
+    bench install-app --site $SITE_NAME siud
 
     echo "Site created successfully!"
 else
-    echo "Site $SITE_NAME already exists, running migrations..."
-    bench --site $SITE_NAME migrate
+    echo "Site $SITE_NAME already exists, checking apps..."
+    # Install siud if not already installed
+    if ! bench list-apps --site $SITE_NAME | grep -q siud; then
+        echo "Installing siud app..."
+        bench install-app --site $SITE_NAME siud
+    fi
+    bench migrate --site $SITE_NAME
 fi
 
 echo "Init complete."

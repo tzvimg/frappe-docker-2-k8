@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frappe-frontend
+  namespace: frappe
+spec:
+  selector:
+    app: frappe-frontend
+  ports:
+    - port: 8080
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: frappe
+data:
+  default.conf: |
+    upstream backend {
+      server frappe-backend:8000;
+    }
+    upstream websocket {
+      server frappe-websocket:9000;
+    }
+    server {
+      listen 8080;
+      root /var/www/sites;
+      
+      location /assets {
+        try_files $uri =404;
+      }
+      location /socket.io {
+        proxy_pass http://websocket;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+      }
+      location / {
+        proxy_pass http://backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frappe-frontend
+  namespace: frappe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frappe-frontend
+  template:
+    metadata:
+      labels:
+        app: frappe-frontend
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: sites
+              mountPath: /var/www/sites
+              readOnly: true
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: sites
+          persistentVolumeClaim:
+            claimName: frappe-sites
+        - name: nginx-config
+          configMap:
+            name: nginx-config

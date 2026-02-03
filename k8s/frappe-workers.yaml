@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frappe-scheduler
+  namespace: frappe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frappe-scheduler
+  template:
+    metadata:
+      labels:
+        app: frappe-scheduler
+    spec:
+      containers:
+        - name: scheduler
+          image: frappe-siud:latest
+          command: ["bench", "schedule"]
+          envFrom:
+            - configMapRef:
+                name: frappe-config
+          volumeMounts:
+            - name: sites
+              mountPath: /home/frappe/frappe-bench/sites
+      volumes:
+        - name: sites
+          persistentVolumeClaim:
+            claimName: frappe-sites
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frappe-worker-short
+  namespace: frappe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frappe-worker-short
+  template:
+    metadata:
+      labels:
+        app: frappe-worker-short
+    spec:
+      containers:
+        - name: worker
+          image: frappe-siud:latest
+          command: ["bench", "worker", "--queue", "short"]
+          envFrom:
+            - configMapRef:
+                name: frappe-config
+          volumeMounts:
+            - name: sites
+              mountPath: /home/frappe/frappe-bench/sites
+      volumes:
+        - name: sites
+          persistentVolumeClaim:
+            claimName: frappe-sites
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frappe-worker-long
+  namespace: frappe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frappe-worker-long
+  template:
+    metadata:
+      labels:
+        app: frappe-worker-long
+    spec:
+      containers:
+        - name: worker
+          image: frappe-siud:latest
+          command: ["bench", "worker", "--queue", "long"]
+          envFrom:
+            - configMapRef:
+                name: frappe-config
+          volumeMounts:
+            - name: sites
+              mountPath: /home/frappe/frappe-bench/sites
+      volumes:
+        - name: sites
+          persistentVolumeClaim:
+            claimName: frappe-sites

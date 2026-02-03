@@ -29,6 +29,7 @@ services:
     build:
       context: ./frappe_docker/development/frappe-bench/apps
       dockerfile: ${PWD}/docker/frappe/Dockerfile
+    image: frappe-app:local
     environment:
       - DB_HOST=mariadb
       - DB_PORT=3306
@@ -43,9 +44,7 @@ services:
         condition: service_completed_successfully
 
   frappe-websocket:
-    build:
-      context: ./frappe_docker/development/frappe-bench/apps
-      dockerfile: ${PWD}/docker/frappe/Dockerfile
+    image: frappe-app:local
     command: node /home/frappe/frappe-bench/apps/frappe/socketio.js
     environment:
       - REDIS_QUEUE=redis://redis-queue:6379
@@ -55,9 +54,7 @@ services:
       - frappe-backend
 
   frappe-worker-short:
-    build:
-      context: ./frappe_docker/development/frappe-bench/apps
-      dockerfile: ${PWD}/docker/frappe/Dockerfile
+    image: frappe-app:local
     command: bench worker --queue short
     volumes:
       - frappe-sites:/home/frappe/frappe-bench/sites
@@ -65,9 +62,7 @@ services:
       - frappe-backend
 
   frappe-worker-long:
-    build:
-      context: ./frappe_docker/development/frappe-bench/apps
-      dockerfile: ${PWD}/docker/frappe/Dockerfile
+    image: frappe-app:local
     command: bench worker --queue long
     volumes:
       - frappe-sites:/home/frappe/frappe-bench/sites
@@ -75,9 +70,7 @@ services:
       - frappe-backend
 
   frappe-scheduler:
-    build:
-      context: ./frappe_docker/development/frappe-bench/apps
-      dockerfile: ${PWD}/docker/frappe/Dockerfile
+    image: frappe-app:local
     command: bench schedule
     volumes:
       - frappe-sites:/home/frappe/frappe-bench/sites
@@ -86,9 +79,7 @@ services:
         condition: service_completed_successfully
 
   frappe-init:
-    build:
-      context: ./frappe_docker/development/frappe-bench/apps
-      dockerfile: ${PWD}/docker/frappe/Dockerfile
+    image: frappe-app:local
     command: /scripts/init-site.sh
     environment:
       - DB_HOST=mariadb

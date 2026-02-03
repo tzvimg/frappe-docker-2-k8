@@ -87,6 +87,10 @@ spec:
         - name: init-site
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           command: ["/bin/bash", "-c"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           args:
             - |
               cd /home/frappe/frappe-bench
@@ -115,6 +119,10 @@ spec:
       containers:
         - name: backend
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           envFrom:
             - configMapRef:
                 name: frappe-config
@@ -126,6 +134,10 @@ spec:
         - name: websocket
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           command: ["node", "/home/frappe/frappe-bench/apps/frappe/socketio.js"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           envFrom:
             - configMapRef:
                 name: frappe-config
@@ -137,6 +149,10 @@ spec:
         - name: scheduler
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           command: ["bench", "schedule"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           envFrom:
             - configMapRef:
                 name: frappe-config
@@ -146,6 +162,10 @@ spec:
         - name: worker-short
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           command: ["bench", "worker", "--queue", "short"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           envFrom:
             - configMapRef:
                 name: frappe-config
@@ -155,6 +175,10 @@ spec:
         - name: worker-long
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           command: ["bench", "worker", "--queue", "long"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           envFrom:
             - configMapRef:
                 name: frappe-config
@@ -163,6 +187,10 @@ spec:
               mountPath: /home/frappe/frappe-bench/sites
         - name: nginx
           image: artifactory.snifim.blroot/remote_registry_docker_io/nginx:alpine
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           ports:
             - containerPort: 8080
           volumeMounts:

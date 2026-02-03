@@ -24,8 +24,16 @@ spec:
       labels:
         app: portal-ui
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: portal-ui
           image: artifactory.snifim.blroot/remote_registry_docker_io/portal-ui:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           ports:
             - containerPort: 80

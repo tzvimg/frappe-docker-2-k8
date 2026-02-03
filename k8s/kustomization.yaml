@@ -10,13 +10,6 @@ resources:
   - frappe-single-pod.yaml
   - portal-ui.yaml
   - ingress-tanzu.yaml
-patches:
-  - path: security-patch.yaml
-    target:
-      kind: Deployment
-  - path: security-patch-statefulset.yaml
-    target:
-      kind: StatefulSet
 images:
   - name: frappe-siud
     newName: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud

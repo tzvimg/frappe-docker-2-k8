@@ -24,9 +24,17 @@ spec:
       labels:
         app: redis-cache
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: redis
           image: artifactory.snifim.blroot/remote_registry_docker_io/redis:6.2-alpine
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           ports:
             - containerPort: 6379
 ---
@@ -56,8 +64,16 @@ spec:
       labels:
         app: redis-queue
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: redis
           image: artifactory.snifim.blroot/remote_registry_docker_io/redis:6.2-alpine
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           ports:
             - containerPort: 6379

@@ -11,3 +11,9 @@ spec:
         fsGroup: 999
         seccompProfile:
           type: RuntimeDefault
+      containers:
+        - name: "*"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]

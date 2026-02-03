@@ -9,11 +9,11 @@ spec:
       restartPolicy: OnFailure
       initContainers:
         - name: wait-for-mariadb
-          image: busybox
+          image: artifactory.snifim.blroot/remote_registry_docker_io/busybox
           command: ['sh', '-c', 'until nc -z mariadb 3306; do sleep 2; done']
       containers:
         - name: init
-          image: frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           command: ["/bin/bash", "-c"]
           args:
             - |

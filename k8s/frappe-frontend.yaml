@@ -59,7 +59,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: nginx:alpine
+          image: artifactory.snifim.blroot/remote_registry_docker_io/nginx:alpine
           ports:
             - containerPort: 8080
           volumeMounts:

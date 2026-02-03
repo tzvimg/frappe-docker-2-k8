@@ -72,10 +72,10 @@ spec:
     spec:
       initContainers:
         - name: wait-db
-          image: busybox
+          image: artifactory.snifim.blroot/remote_registry_docker_io/busybox
           command: ['sh', '-c', 'until nc -z mariadb 3306; do sleep 2; done']
         - name: init-site
-          image: frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           command: ["/bin/bash", "-c"]
           args:
             - |
@@ -104,7 +104,7 @@ spec:
               mountPath: /home/frappe/frappe-bench/sites
       containers:
         - name: backend
-          image: frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           envFrom:
             - configMapRef:
                 name: frappe-config
@@ -114,7 +114,7 @@ spec:
           ports:
             - containerPort: 8000
         - name: websocket
-          image: frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           command: ["node", "/home/frappe/frappe-bench/apps/frappe/socketio.js"]
           envFrom:
             - configMapRef:
@@ -125,7 +125,7 @@ spec:
           ports:
             - containerPort: 9000
         - name: scheduler
-          image: frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           command: ["bench", "schedule"]
           envFrom:
             - configMapRef:
@@ -134,7 +134,7 @@ spec:
             - name: sites
               mountPath: /home/frappe/frappe-bench/sites
         - name: worker-short
-          image: frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           command: ["bench", "worker", "--queue", "short"]
           envFrom:
             - configMapRef:
@@ -143,7 +143,7 @@ spec:
             - name: sites
               mountPath: /home/frappe/frappe-bench/sites
         - name: worker-long
-          image: frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           command: ["bench", "worker", "--queue", "long"]
           envFrom:
             - configMapRef:
@@ -152,7 +152,7 @@ spec:
             - name: sites
               mountPath: /home/frappe/frappe-bench/sites
         - name: nginx
-          image: nginx:alpine
+          image: artifactory.snifim.blroot/remote_registry_docker_io/nginx:alpine
           ports:
             - containerPort: 8080
           volumeMounts:

@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: mariadb
-          image: mariadb:11.8
+          image: artifactory.snifim.blroot/remote_registry_docker_io/mariadb:11.8
           args:
             - --character-set-server=utf8mb4
             - --collation-server=utf8mb4_unicode_ci

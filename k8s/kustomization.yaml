@@ -12,8 +12,8 @@ resources:
   - ingress-tanzu.yaml
 images:
   - name: frappe-siud
-    newName: gcr.io/PROJECT/frappe-siud
+    newName: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud
     newTag: latest
   - name: portal-ui
-    newName: gcr.io/PROJECT/portal-ui
+    newName: artifactory.snifim.blroot/remote_registry_docker_io/portal-ui
     newTag: latest

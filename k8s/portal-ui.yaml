@@ -26,6 +26,6 @@ spec:
     spec:
       containers:
         - name: portal-ui
-          image: portal-ui:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/portal-ui:latest
           ports:
             - containerPort: 80

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: scheduler
-          image: frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           command: ["bench", "schedule"]
           envFrom:
             - configMapRef:
@@ -45,7 +45,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           command: ["bench", "worker", "--queue", "short"]
           envFrom:
             - configMapRef:
@@ -75,7 +75,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
           command: ["bench", "worker", "--queue", "long"]
           envFrom:
             - configMapRef:

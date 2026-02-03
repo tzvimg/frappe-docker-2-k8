@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: placeholder
 spec:
@@ -7,5 +7,7 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
+        runAsUser: 999
+        fsGroup: 999
         seccompProfile:
           type: RuntimeDefault

@@ -75,8 +75,8 @@ spec:
           type: RuntimeDefault
       initContainers:
         - name: wait-db
-          image: artifactory.snifim.blroot/remote_registry_docker_io/busybox
-          command: ['sh', '-c', 'until nc -z mariadb.frappe.svc.cluster.local 3306; do sleep 2; done']
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
+          command: ['sh', '-c', 'until nc -z mariadb 3306; do sleep 2; done']
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true

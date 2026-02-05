@@ -11,14 +11,14 @@ spec:
         runAsUser: 1000
       initContainers:
         - name: wait-for-mariadb
-          image: artifactory.snifim.blroot/remote_registry_docker_io/busybox
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop: ["ALL"]
             runAsNonRoot: true
             runAsUser: 1000
-          command: ['sh', '-c', 'until nc -z mariadb.frappe.svc.cluster.local 3306; do sleep 2; done']
+          command: ['sh', '-c', 'until nc -z mariadb 3306; do sleep 2; done']
       containers:
         - name: init
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16

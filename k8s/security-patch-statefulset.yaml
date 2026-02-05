@@ -15,5 +15,6 @@ spec:
         - name: "*"
           securityContext:
             allowPrivilegeEscalation: false
+            runAsNonRoot: true
             capabilities:
               drop: ["ALL"]

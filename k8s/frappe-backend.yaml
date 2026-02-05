@@ -29,6 +29,8 @@ spec:
       containers:
         - name: frappe
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
+          securityContext:
+            allowPrivilegeEscalation: false
           envFrom:
             - configMapRef:
                 name: frappe-config

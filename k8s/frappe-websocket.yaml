@@ -31,6 +31,7 @@ spec:
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
           securityContext:
             allowPrivilegeEscalation: false
+            runAsNonRoot: true
           command: ["node", "/home/frappe/frappe-bench/apps/frappe/socketio.js"]
           envFrom:
             - configMapRef:

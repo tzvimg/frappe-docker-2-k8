@@ -71,7 +71,6 @@ spec:
         app: frappe
     spec:
       securityContext:
-        runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
       initContainers:
@@ -82,7 +81,6 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop: ["ALL"]
-            runAsNonRoot: true
             runAsUser: 1000
         - name: init-site
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16

@@ -80,6 +80,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
+            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
             runAsUser: 1000
@@ -89,6 +90,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
+            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
           args:
@@ -122,6 +124,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
+            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
           envFrom:
@@ -138,6 +141,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
+            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
           envFrom:
@@ -154,6 +158,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
+            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
           envFrom:
@@ -168,6 +173,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
+            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
           envFrom:
@@ -182,6 +188,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
+            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
           envFrom:
@@ -195,6 +202,7 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
+            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
           ports:

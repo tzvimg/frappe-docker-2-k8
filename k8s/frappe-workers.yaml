@@ -23,6 +23,7 @@ spec:
             capabilities:
               drop: ["ALL"]
             runAsNonRoot: true
+            runAsUser: 1000
           command: ["bench", "schedule"]
           envFrom:
             - configMapRef:
@@ -60,6 +61,7 @@ spec:
             capabilities:
               drop: ["ALL"]
             runAsNonRoot: true
+            runAsUser: 1000
           command: ["bench", "worker", "--queue", "short"]
           envFrom:
             - configMapRef:
@@ -97,6 +99,7 @@ spec:
             capabilities:
               drop: ["ALL"]
             runAsNonRoot: true
+            runAsUser: 1000
           command: ["bench", "worker", "--queue", "long"]
           envFrom:
             - configMapRef:

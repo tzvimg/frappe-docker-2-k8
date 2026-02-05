@@ -17,6 +17,7 @@ spec:
             capabilities:
               drop: ["ALL"]
             runAsNonRoot: true
+            runAsUser: 1000
           command: ['sh', '-c', 'until nc -z mariadb 3306; do sleep 2; done']
       containers:
         - name: init
@@ -26,6 +27,7 @@ spec:
             capabilities:
               drop: ["ALL"]
             runAsNonRoot: true
+            runAsUser: 1000
           command: ["/bin/bash", "-c"]
           args:
             - |

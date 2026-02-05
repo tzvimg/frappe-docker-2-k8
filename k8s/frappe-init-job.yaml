@@ -7,6 +7,9 @@ spec:
   template:
     spec:
       restartPolicy: OnFailure
+      securityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
       initContainers:
         - name: wait-for-mariadb
           image: artifactory.snifim.blroot/remote_registry_docker_io/busybox

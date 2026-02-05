@@ -24,6 +24,9 @@ spec:
       labels:
         app: frappe-websocket
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
       containers:
         - name: websocket
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16

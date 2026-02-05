@@ -13,6 +13,9 @@ spec:
       labels:
         app: frappe-scheduler
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
       containers:
         - name: scheduler
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
@@ -43,6 +46,9 @@ spec:
       labels:
         app: frappe-worker-short
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
       containers:
         - name: worker
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
@@ -73,6 +79,9 @@ spec:
       labels:
         app: frappe-worker-long
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
       containers:
         - name: worker
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16

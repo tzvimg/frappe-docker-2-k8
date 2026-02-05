@@ -33,6 +33,7 @@ spec:
           image: artifactory.snifim.blroot/remote_registry_docker_io/portal-ui:latest
           securityContext:
             allowPrivilegeEscalation: false
+            runAsNonRoot: true
             capabilities:
               drop: ["ALL"]
           ports:

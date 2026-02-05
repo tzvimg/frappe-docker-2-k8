@@ -57,9 +57,14 @@ spec:
       labels:
         app: frappe-frontend
     spec:
+      securityContext:
+        runAsUser: 101
       containers:
         - name: nginx
           image: artifactory.snifim.blroot/remote_registry_docker_io/nginx:alpine
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
           ports:
             - containerPort: 8080
           volumeMounts:

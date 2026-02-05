@@ -52,7 +52,6 @@ spec:
         app: frappe-worker-short
     spec:
       securityContext:
-        runAsUser: 1000
       containers:
         - name: worker
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
@@ -61,7 +60,6 @@ spec:
             capabilities:
               drop: ["ALL"]
             runAsNonRoot: true
-            runAsUser: 1000
           command: ["bench", "worker", "--queue", "short"]
           envFrom:
             - configMapRef:
@@ -90,7 +88,6 @@ spec:
         app: frappe-worker-long
     spec:
       securityContext:
-        runAsUser: 1000
       containers:
         - name: worker
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
@@ -99,7 +96,6 @@ spec:
             capabilities:
               drop: ["ALL"]
             runAsNonRoot: true
-            runAsUser: 1000
           command: ["bench", "worker", "--queue", "long"]
           envFrom:
             - configMapRef:

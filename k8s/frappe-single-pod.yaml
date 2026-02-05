@@ -83,14 +83,12 @@ spec:
             runAsUser: 1000
             capabilities:
               drop: ["ALL"]
-            runAsUser: 1000
         - name: init-site
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
           command: ["/bin/bash", "-c"]
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
-            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
           args:
@@ -124,7 +122,6 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
-            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
           envFrom:
@@ -141,7 +138,6 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
-            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
           envFrom:
@@ -158,7 +154,6 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
-            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
           envFrom:
@@ -173,7 +168,6 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
-            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
           envFrom:
@@ -188,7 +182,6 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
-            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
           envFrom:
@@ -202,7 +195,6 @@ spec:
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
-            runAsUser: 1000
             capabilities:
               drop: ["ALL"]
           ports:

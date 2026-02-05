@@ -14,6 +14,8 @@ spec:
           image: artifactory.snifim.blroot/remote_registry_docker_io/busybox
           securityContext:
             allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
             runAsNonRoot: true
           command: ['sh', '-c', 'until nc -z mariadb 3306; do sleep 2; done']
       containers:
@@ -21,6 +23,8 @@ spec:
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
           securityContext:
             allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
             runAsNonRoot: true
           command: ["/bin/bash", "-c"]
           args:

@@ -79,6 +79,7 @@ spec:
           command: ['sh', '-c', 'until nc -z mariadb 3306; do sleep 2; done']
           securityContext:
             allowPrivilegeEscalation: false
+            runAsNonRoot: true
             capabilities:
               drop: ["ALL"]
             runAsUser: 1000

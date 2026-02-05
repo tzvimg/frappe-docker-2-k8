@@ -9,16 +9,7 @@ spec:
       restartPolicy: OnFailure
       securityContext:
         runAsUser: 1000
-      initContainers:
-        - name: wait-for-mariadb
-          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop: ["ALL"]
-            runAsNonRoot: true
-            runAsUser: 1000
-          command: ["bash", "-c", "until echo > /dev/tcp/mariadb-0.mariadb.frappe.svc.cluster.local/3306 2>/dev/null; do sleep 2; done"]
+      dnsPolicy: ClusterFirst
       containers:
         - name: init
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16

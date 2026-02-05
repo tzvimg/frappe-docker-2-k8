@@ -74,15 +74,6 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       initContainers:
-        - name: wait-db
-          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
-          command: ["bash", "-c", "until echo > /dev/tcp/mariadb-0.mariadb.frappe.svc.cluster.local/3306 2>/dev/null; do sleep 2; done"]
-          securityContext:
-            allowPrivilegeEscalation: false
-            runAsNonRoot: true
-            runAsUser: 1000
-            capabilities:
-              drop: ["ALL"]
         - name: init-site
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
           command: ["/bin/bash", "-c"]

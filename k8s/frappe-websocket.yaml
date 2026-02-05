@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: websocket
-          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
           command: ["node", "/home/frappe/frappe-bench/apps/frappe/socketio.js"]
           envFrom:
             - configMapRef:

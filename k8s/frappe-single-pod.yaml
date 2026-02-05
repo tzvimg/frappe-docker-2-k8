@@ -85,7 +85,7 @@ spec:
             runAsNonRoot: true
             runAsUser: 1000
         - name: init-site
-          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
           command: ["/bin/bash", "-c"]
           securityContext:
             allowPrivilegeEscalation: false
@@ -118,7 +118,7 @@ spec:
               mountPath: /home/frappe/frappe-bench/sites
       containers:
         - name: backend
-          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -132,7 +132,7 @@ spec:
           ports:
             - containerPort: 8000
         - name: websocket
-          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
           command: ["node", "/home/frappe/frappe-bench/apps/frappe/socketio.js"]
           securityContext:
             allowPrivilegeEscalation: false
@@ -147,7 +147,7 @@ spec:
           ports:
             - containerPort: 9000
         - name: scheduler
-          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
           command: ["bench", "schedule"]
           securityContext:
             allowPrivilegeEscalation: false
@@ -160,7 +160,7 @@ spec:
             - name: sites
               mountPath: /home/frappe/frappe-bench/sites
         - name: worker-short
-          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
           command: ["bench", "worker", "--queue", "short"]
           securityContext:
             allowPrivilegeEscalation: false
@@ -173,7 +173,7 @@ spec:
             - name: sites
               mountPath: /home/frappe/frappe-bench/sites
         - name: worker-long
-          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
           command: ["bench", "worker", "--queue", "long"]
           securityContext:
             allowPrivilegeEscalation: false

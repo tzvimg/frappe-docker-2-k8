@@ -13,7 +13,7 @@ spec:
           command: ['sh', '-c', 'until nc -z mariadb 3306; do sleep 2; done']
       containers:
         - name: init
-          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe-siud:latest
+          image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
           command: ["/bin/bash", "-c"]
           args:
             - |

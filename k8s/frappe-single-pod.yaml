@@ -76,7 +76,7 @@ spec:
       initContainers:
         - name: wait-db
           image: artifactory.snifim.blroot/remote_registry_docker_io/frappe/erpnext:v16
-          command: ['sh', '-c', 'until nc -z mariadb 3306; do sleep 2; done']
+          command: ['sh', '-c', 'until bash -c 'echo > /dev/tcp/mariadb/3306' 2>/dev/null; do sleep 2; done']
           securityContext:
             allowPrivilegeEscalation: false
             runAsNonRoot: true
